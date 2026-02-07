@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة التحكم - الطلبات</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Tahoma,Arial;margin:0;background:#f6f7fb;color:#111}
+    .wrap{max-width:1100px;margin:24px auto;padding:0 14px}
+    .card{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:16px}
+    h1{margin:0 0 12px;font-size:22px}
+    .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input,button{border-radius:10px;border:1px solid #e3e6ef;padding:10px 12px;font-size:14px}
+    input{min-width:220px;flex:1}
+    button{cursor:pointer;background:#ff7a00;color:#fff;border:none}
+    button.secondary{background:#111}
+    button.danger{background:#e53935}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .muted{color:#666;font-size:13px;margin-top:8px}
+    .table{width:100%;border-collapse:collapse;margin-top:14px}
+    .table th,.table td{padding:10px;border-bottom:1px solid #eef0f6;text-align:right;vertical-align:top}
+    .table th{font-size:13px;color:#444;background:#fafbff}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1f4ff;color:#2b3a67;font-size:12px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .status{font-size:13px}
+    .ok{color:#1b5e20}
+    .bad{color:#b71c1c}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+    @media (max-width:700px){
+      .table th:nth-child(6), .table td:nth-child(6){display:none;} /* اخفاء التاريخ على الشاشات الصغيرة */
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div>
+          <h1>لوحة التحكم - الطلبات</h1>
+          <div class="muted">Backend: <span class="mono" id="baseUrlText"></span></div>
+        </div>
+        <div class="row">
+          <input id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
+          <button class="secondary" id="refreshBtn">تحديث</button>
+        </div>
+      </div>
+
+      <div class="muted status" id="status">جاهز</div>
+
+      <table class="table" aria-label="orders">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>الاسم</th>
+            <th>الهاتف</th>
+            <th>المدينة</th>
+            <th>ملاحظة</th>
+            <th>التاريخ</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="7" class="muted">لا توجد بيانات بعد...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  // ضع رابط الباكند هنا
+  const BASE_URL = "https://achir-backend.onrender.com";
+  document.getElementById("baseUrlText").textContent = BASE_URL;
+
+  const tbody = document.getElementById("tbody");
+  const statusEl = document.getElementById("status");
+  const searchEl = document.getElementById("search");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  let allOrders = [];
+
+  function setStatus(msg, ok=true){
+    statusEl.textContent = msg;
+    statusEl.className = "muted status " + (ok ? "ok" : "bad");
+  }
+
+  function esc(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  function render(list){
+    if(!list.length){
+      tbody.innerHTML = `<tr><td colspan="7" class="muted">لا توجد طلبات.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(o => `
+      <tr>
+        <td><span class="pill">#${esc(o.id)}</span></td>
+        <td>${esc(o.name)}</td>
+        <td class="mono">${esc(o.phone)}</td>
+        <td>${esc(o.city)}</td>
+        <td>${esc(o.note)}</td>
+        <td class="mono">${esc(o.created_at)}</td>
+        <td>
+          <div class="actions">
+            <button class="danger" onclick="deleteOrder(${Number(o.id)})">حذف</button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function applySearch(){
+    const q = searchEl.value.trim().toLowerCase();
+    if(!q) return render(allOrders);
+    const filtered = allOrders.filter(o => {
+      const hay = `${o.id} ${o.name} ${o.phone} ${o.city} ${o.note} ${o.created_at}`.toLowerCase();
+      return hay.includes(q);
+    });
+    render(filtered);
+  }
+
+  async function loadOrders(){
+    try{
+      setStatus("جاري جلب الطلبات...");
+      refreshBtn.disabled = true;
+      const res = await fetch(`${BASE_URL}/api/orders`, {cache:"no-store"});
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      allOrders = await res.json();
+      allOrders.sort((a,b)=> (b.id||0)-(a.id||0));
+      applySearch();
+      setStatus(`تم تحميل ${allOrders.length} طلب/طلبات ✅`, true);
+    }catch(e){
+      console.error(e);
+      setStatus("فشل جلب الطلبات ❌ (تأكد من رابط الباكند وأنه يعمل)", false);
+      tbody.innerHTML = `<tr><td colspan="7" class="muted bad">خطأ: ${esc(e.message)}</td></tr>`;
+    }finally{
+      refreshBtn.disabled = false;
+    }
+  }
+
+  async function deleteOrder(id){
+    if(!confirm("هل تريد حذف الطلب رقم #" + id + " ؟")) return;
+    try{
+      setStatus("جاري الحذف...");
+      const res = await fetch(`${BASE_URL}/api/orders/${id}`, { method:"DELETE" });
+      if(!res.ok) {
+        const txt = await res.text();
+        throw new Error(`فشل الحذف (HTTP ${res.status}) - ${txt}`);
+      }
+      // احذف من الواجهة مباشرة
+      allOrders = allOrders.filter(o => Number(o.id) !== Number(id));
+      applySearch();
+      setStatus("تم الحذف ✅", true);
+    }catch(e){
+      console.error(e);
+      setStatus("لم يتم الحذف ❌ (يجب تفعيل DELETE في الباكند)", false);
+      alert(e.message);
+    }
+  }
+
+  // expose deleteOrder
+  window.deleteOrder = deleteOrder;
+
+  searchEl.addEventListener("input", applySearch);
+  refreshBtn.addEventListener("click", loadOrders);
+
+  loadOrders();
+</script>
+</body>
+</html>
