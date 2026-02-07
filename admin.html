@@ -1,142 +1,461 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#f3f5f9;
-margin:0;
-direction:rtl;
-}
-
-.header{
-background:#0b1d3a;
-color:white;
-padding:20px;
-text-align:center;
-}
-
-.container{
-max-width:700px;
-margin:20px auto;
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th{
-background:#0b1d3a;
-color:white;
-padding:10px;
-}
-
-td{
-padding:10px;
-border-bottom:1px solid #ddd;
-}
-
-button{
-background:red;
-color:white;
-border:none;
-padding:5px;
-cursor:pointer;
-}
-
-.refresh{
-background:#ff7a00;
-margin-bottom:10px;
-padding:10px;
-}
-
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة التحكم - منصة أشير</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071021;
+      --panel:#ffffff;
+      --line:#e5e7eb;
+      --muted:#6b7280;
+      --brand:#ff7a00;
+      --green:#16a34a;
+      --red:#dc2626;
+      --shadow: 0 20px 60px rgba(0,0,0,.18);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Cairo", system-ui, -apple-system, Segoe UI, Arial;
+      background:
+        radial-gradient(900px 450px at 10% 0%, rgba(255,122,0,.18), transparent 55%),
+        radial-gradient(900px 450px at 90% 30%, rgba(22,163,74,.14), transparent 55%),
+        linear-gradient(180deg, #071021, #071021 38%, #f6f7fb 38%, #f6f7fb);
+      min-height:100vh;
+      color:#0f172a;
+    }
+    header{
+      background: linear-gradient(135deg, #071021, #0b1630);
+      color:#fff;
+      padding:18px 16px 22px;
+      position:sticky;top:0;z-index:10;
+      box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:0 12px;}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    }
+    .title{
+      display:flex;align-items:center;gap:12px;
+    }
+    .avatar{
+      width:44px;height:44px;border-radius:14px;
+      background: linear-gradient(135deg, var(--brand), #ffb000);
+      display:grid;place-items:center;font-weight:900;
+      box-shadow: 0 10px 25px rgba(255,122,0,.35);
+    }
+    .title h1{margin:0;font-size:18px;font-weight:900}
+    .title p{margin:0;color:rgba(255,255,255,.75);font-size:12px}
+    .nav{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    .btn{
+      border:0;cursor:pointer;font-family:inherit;font-weight:900;
+      padding:10px 14px;border-radius:14px;
+      display:inline-flex;align-items:center;gap:10px;
+      text-decoration:none;
+    }
+    .btn.primary{background:var(--brand);color:#fff; box-shadow: 0 12px 30px rgba(255,122,0,.25)}
+    .btn.green{background:var(--green);color:#fff; box-shadow: 0 12px 30px rgba(22,163,74,.25)}
+    .btn.ghost{background: rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+    main{padding:16px 0 60px;}
+    .panel{
+      background:var(--panel);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.7);
+      overflow:hidden;
+    }
+    .head{
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fff7ef);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .head h2{margin:0;font-size:18px;font-weight:900}
+    .head small{color:var(--muted)}
+    .tools{
+      padding:14px 18px;
+      border-bottom:1px solid var(--line);
+      display:grid;
+      grid-template-columns: 1.5fr .8fr .8fr;
+      gap:10px;
+      align-items:center;
+    }
+    input{
+      width:100%;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      outline:none;
+      font-family:inherit;
+      background:#fff;
+      transition:.2s;
+    }
+    input:focus{border-color: rgba(255,122,0,.6); box-shadow: 0 0 0 4px rgba(255,122,0,.12)}
+    .pill{
+      border:1px dashed var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      text-align:center;
+      font-weight:900;
+      color:#111827;
+      background:#fafafa;
+    }
+    .status{
+      margin:12px 18px 0;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px dashed var(--line);
+      background:#fafafa;
+      font-size:13px;
+    }
+    .status.ok{border-color: rgba(22,163,74,.35); background: rgba(22,163,74,.08)}
+    .status.err{border-color: rgba(220,38,38,.35); background: rgba(220,38,38,.08); color:#7f1d1d}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+    }
+    thead th{
+      background:#0b1630;
+      color:#fff;
+      padding:12px 10px;
+      font-size:13px;
+      text-align:right;
+      position:sticky; top:0;
+    }
+    tbody td{
+      border-bottom:1px solid var(--line);
+      padding:12px 10px;
+      font-size:13px;
+      vertical-align:top;
+      background:#fff;
+    }
+    tbody tr:hover td{background:#fffaf4}
+    .actions{
+      display:flex;gap:8px;flex-wrap:wrap;
+    }
+    .iconbtn{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:8px 10px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      font-family:inherit;
+    }
+    .iconbtn.danger{border-color: rgba(220,38,38,.25); color:#b91c1c; background: rgba(220,38,38,.06)}
+    .iconbtn.save{border-color: rgba(22,163,74,.25); color:#166534; background: rgba(22,163,74,.06)}
+    .muted{color:var(--muted); font-size:12px}
+    .footer{
+      padding:12px 18px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    code{background:#111827;color:#fff;padding:3px 8px;border-radius:10px}
+    @media (max-width:860px){
+      .tools{grid-template-columns:1fr}
+      thead{display:none}
+      table,tbody,tr,td{display:block;width:100%}
+      tbody td{border-bottom:0}
+      tbody tr{border-bottom:1px solid var(--line)}
+      tbody td::before{
+        content:attr(data-label);
+        display:block;
+        font-weight:900;
+        margin-bottom:6px;
+        color:#111827;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="header">
-<h2>لوحة تحكم منصة أشير</h2>
-</div>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <div class="avatar">A</div>
+        <div>
+          <h1>لوحة تحكم منصة أشير</h1>
+          <p id="backendLine">Backend: ...</p>
+        </div>
+      </div>
 
-<div class="container">
+      <div class="nav">
+        <a class="btn ghost" href="./index.html">صفحة الطلب</a>
+        <button class="btn green" id="refreshBtn">تحديث</button>
+        <button class="btn primary" id="exportBtn">تصدير Excel</button>
+      </div>
+    </div>
+  </div>
+</header>
 
-<button class="refresh" onclick="loadOrders()">تحديث</button>
+<main>
+  <div class="wrap">
+    <div class="panel">
+      <div class="head">
+        <div>
+          <h2>الطلبات</h2>
+          <small>بحث بالاسم/الهاتف/المدينة — التعديل والحذف مباشرة على الـ Backend</small>
+        </div>
+        <div class="muted" id="lastLoad">آخر تحميل: -</div>
+      </div>
 
-<table>
+      <div class="tools">
+        <input id="search" placeholder="بحث..." />
+        <div class="pill" id="countPill">عدد الطلبات: 0</div>
+        <div class="pill" id="lastPill">آخر تحميل: -</div>
+      </div>
 
-<thead>
-<tr>
-<th>الاسم</th>
-<th>الهاتف</th>
-<th>المدينة</th>
-<th>حذف</th>
-</tr>
-</thead>
+      <div id="status" class="status">جاري التحميل…</div>
 
-<tbody id="orders"></tbody>
+      <div style="max-height:52vh; overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>الهاتف</th>
+              <th>المدينة</th>
+              <th>النوع</th>
+              <th>ملاحظة</th>
+              <th>التاريخ</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
 
-</table>
-
-</div>
+      <div class="footer">
+        <div>Backend: <code id="backendCode"></code></div>
+        <div class="muted">ملاحظة: هذا Front-End. الحماية الحقيقية تكون عبر صلاحيات داخل الـ Backend.</div>
+      </div>
+    </div>
+  </div>
+</main>
 
 <script>
+  // ✅ ضع رابط الـ backend هنا
+  const BACKEND_URL = "https://achir-backend-1.onrender.com";
 
-const API="https://achir-backend-1.onrender.com/api/orders";
+  // ✅ مسارات API — مهم جداً (كان عندك خطأ 404 لأنك تستخدم /orders بدون /api)
+  const API = {
+    list:   `${BACKEND_URL}/api/orders`,
+    create: `${BACKEND_URL}/api/orders`,
+    update: (id) => `${BACKEND_URL}/api/orders/${id}`,
+    remove: (id) => `${BACKEND_URL}/api/orders/${id}`,
+    health: `${BACKEND_URL}/api/health`,
+  };
 
-function loadOrders(){
+  const statusEl = document.getElementById("status");
+  const tbody = document.getElementById("tbody");
+  const searchEl = document.getElementById("search");
+  const countPill = document.getElementById("countPill");
+  const lastPill = document.getElementById("lastPill");
+  const backendCode = document.getElementById("backendCode");
+  const backendLine = document.getElementById("backendLine");
+  const lastLoad = document.getElementById("lastLoad");
 
-fetch(API)
-.then(res=>res.json())
-.then(data=>{
+  backendCode.textContent = BACKEND_URL;
+  backendLine.textContent = `Backend: ${BACKEND_URL}`;
 
-let html="";
+  let orders = [];
 
-data.reverse().forEach(o=>{
+  function nowStr(){
+    const d = new Date();
+    return d.toLocaleString("ar-DZ");
+  }
+  function setStatus(msg, type=""){
+    statusEl.className = "status" + (type ? " " + type : "");
+    statusEl.innerHTML = msg;
+  }
 
-html+=`
-<tr>
-<td>${o.name}</td>
-<td>${o.phone}</td>
-<td>${o.city}</td>
-<td>
-<button onclick="deleteOrder('${o.id}')">X</button>
-</td>
-</tr>
-`;
+  function safe(v){ return (v ?? "").toString(); }
 
-});
+  function render(list){
+    tbody.innerHTML = "";
 
-document.getElementById("orders").innerHTML=html;
+    if(!Array.isArray(list) || list.length === 0){
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#6b7280; padding:18px;">لا توجد طلبات حالياً.</td></tr>`;
+      return;
+    }
 
-});
+    for(const o of list){
+      const tr = document.createElement("tr");
 
-}
+      const created = o.created_at || o.createdAt || o.date || "";
+      tr.innerHTML = `
+        <td data-label="الاسم">
+          <input value="${escapeHtml(safe(o.name))}" data-field="name" data-id="${o.id}" />
+        </td>
+        <td data-label="الهاتف">
+          <input value="${escapeHtml(safe(o.phone))}" data-field="phone" data-id="${o.id}" />
+        </td>
+        <td data-label="المدينة">
+          <input value="${escapeHtml(safe(o.city))}" data-field="city" data-id="${o.id}" />
+        </td>
+        <td data-label="النوع">
+          <input value="${escapeHtml(safe(o.type))}" data-field="type" data-id="${o.id}" />
+        </td>
+        <td data-label="ملاحظة">
+          <input value="${escapeHtml(safe(o.note))}" data-field="note" data-id="${o.id}" />
+        </td>
+        <td data-label="التاريخ" class="muted">${escapeHtml(safe(created))}</td>
+        <td data-label="إجراءات">
+          <div class="actions">
+            <button class="iconbtn save" data-action="save" data-id="${o.id}">حفظ</button>
+            <button class="iconbtn danger" data-action="del" data-id="${o.id}">حذف</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
 
-function deleteOrder(id){
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
 
-fetch(API+"/"+id,{
-method:"DELETE"
-})
-.then(()=>{
-loadOrders();
-});
+  function filterOrders(q){
+    q = q.trim().toLowerCase();
+    if(!q) return orders;
+    return orders.filter(o => {
+      const hay = `${safe(o.name)} ${safe(o.phone)} ${safe(o.city)} ${safe(o.type)} ${safe(o.note)}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
 
-}
+  async function loadOrders(){
+    try{
+      setStatus("جاري التحميل… ⏳");
+      const r = await fetch(API.list);
+      const text = await r.text();
+      let data;
+      try{ data = JSON.parse(text); }catch{ data = text; }
 
-loadOrders();
+      if(!r.ok){
+        setStatus(`فشل التحميل ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
+        return;
+      }
 
+      if(!Array.isArray(data)){
+        setStatus("فشل التحميل ❌ الـ Backend لم يرجع Array. تأكد من /api/orders", "err");
+        return;
+      }
+
+      orders = data;
+      const t = nowStr();
+      lastPill.textContent = `آخر تحميل: ${t}`;
+      lastLoad.textContent = `آخر تحميل: ${t}`;
+      countPill.textContent = `عدد الطلبات: ${orders.length}`;
+
+      render(filterOrders(searchEl.value));
+      setStatus("تم التحميل ✅", "ok");
+    }catch(e){
+      setStatus(`خطأ اتصال ❌ <br>${e}`, "err");
+    }
+  }
+
+  async function saveOrder(id){
+    const rowInputs = [...document.querySelectorAll(`input[data-id="${id}"]`)];
+    const payload = {};
+    rowInputs.forEach(inp => payload[inp.dataset.field] = inp.value.trim());
+
+    try{
+      setStatus("جاري حفظ التعديل… ⏳");
+      const r = await fetch(API.update(id), {
+        method:"PUT",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const text = await r.text();
+      let data; try{ data = JSON.parse(text); }catch{ data = text; }
+
+      if(!r.ok){
+        setStatus(`فشل الحفظ ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
+        return;
+      }
+
+      setStatus("تم الحفظ ✅", "ok");
+      await loadOrders();
+    }catch(e){
+      setStatus(`خطأ اتصال أثناء الحفظ ❌ <br>${e}`, "err");
+    }
+  }
+
+  async function deleteOrder(id){
+    if(!confirm("هل تريد حذف الطلب؟")) return;
+
+    try{
+      setStatus("جاري الحذف… ⏳");
+      const r = await fetch(API.remove(id), { method:"DELETE" });
+      const text = await r.text();
+      let data; try{ data = JSON.parse(text); }catch{ data = text; }
+
+      if(!r.ok){
+        setStatus(`فشل الحذف ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
+        return;
+      }
+
+      setStatus("تم الحذف ✅", "ok");
+      await loadOrders();
+    }catch(e){
+      setStatus(`خطأ اتصال أثناء الحذف ❌ <br>${e}`, "err");
+    }
+  }
+
+  function exportCSV(){
+    const list = filterOrders(searchEl.value);
+    const headers = ["id","name","phone","city","type","note","created_at"];
+    const rows = [headers.join(",")];
+
+    for(const o of list){
+      const row = headers.map(h => {
+        const v = safe(o[h] ?? o[h.replace("_at","At")] ?? "");
+        return `"${v.replace(/"/g,'""')}"`;
+      }).join(",");
+      rows.push(row);
+    }
+
+    const blob = new Blob(["\ufeff" + rows.join("\n")], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "orders.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", loadOrders);
+  document.getElementById("exportBtn").addEventListener("click", exportCSV);
+
+  searchEl.addEventListener("input", () => {
+    const list = filterOrders(searchEl.value);
+    countPill.textContent = `عدد الطلبات: ${list.length} / ${orders.length}`;
+    render(list);
+  });
+
+  tbody.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const act = btn.dataset.action;
+    if(act === "save") saveOrder(id);
+    if(act === "del") deleteOrder(id);
+  });
+
+  // تحميل أولي
+  loadOrders();
 </script>
-
 </body>
-</html>
+  </html>
