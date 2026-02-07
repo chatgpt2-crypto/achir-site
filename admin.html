@@ -1,342 +1,633 @@
-<!DOCTYPE html>
-<html dir="rtl">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>لوحة تحكم منصة أشير</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Super - منصة أشير</title>
 
-<style>
+  <style>
+    :root{
+      --bg:#f4f6f9;
+      --card:#ffffff;
+      --ink:#0b1a2e;
+      --muted:#667085;
+      --brand:#ff7a00;
+      --ok:#16a34a;
+      --bad:#ef4444;
+      --line:#e5e7eb;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --r:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, "Noto Kufi Arabic", "Noto Sans Arabic", sans-serif;
+      background:var(--bg);
+      color:#111827;
+      padding:16px;
+    }
+    .wrap{max-width:1100px;margin:auto}
+    .card{
+      background:var(--card);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      border:1px solid #eef2f7;
+      overflow:hidden;
+    }
+    .header{
+      padding:18px 18px 12px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .title{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #e0e7ff;
+    }
+    .title h1{
+      margin:0;
+      font-size:20px;
+      color:#0f172a;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+    }
+    .actions{
+      display:flex;gap:10px;flex-wrap:wrap;
+    }
+    button{
+      border:0;
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.15s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    button:active{transform:translateY(1px)}
+    .btn-brand{background:var(--brand);color:#fff}
+    .btn-dark{background:var(--ink);color:#fff}
+    .btn-ok{background:var(--ok);color:#fff}
+    .btn-ghost{
+      background:#f8fafc;color:#0f172a;border:1px solid var(--line);
+    }
 
-body{
-font-family:Arial;
-background:#f4f6f9;
-margin:0;
-padding:20px;
-}
+    .grid{
+      padding:0 18px 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.grid{grid-template-columns:1fr}}
 
-.box{
-background:#fff;
-padding:20px;
-border-radius:12px;
-max-width:1000px;
-margin:auto;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
+    .field{
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px;
+    }
+    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input,select{
+      width:100%;
+      border:1px solid #dbe2ea;
+      border-radius:12px;
+      padding:10px;
+      background:#fff;
+      outline:none;
+      font-size:14px;
+    }
 
-h2{
-margin-bottom:10px;
-}
+    .statusbar{
+      padding:0 18px 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      border-top:1px solid #f1f5f9;
+    }
+    .pill{
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+      color:#0f172a;
+      font-size:13px;
+    }
+    .pill strong{color:#0f172a}
+    .msg{
+      color:var(--muted);
+      font-size:13px;
+    }
 
-.top{
-display:flex;
-gap:10px;
-margin-bottom:15px;
-flex-wrap:wrap;
-}
+    .tableWrap{overflow:auto;border-top:1px solid #f1f5f9}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      min-width:980px;
+    }
+    th{
+      position:sticky; top:0;
+      background:var(--ink);
+      color:#fff;
+      padding:12px 10px;
+      font-size:13px;
+      text-align:center;
+      z-index:1;
+    }
+    td{
+      padding:10px;
+      border-bottom:1px solid #edf2f7;
+      text-align:center;
+      font-size:14px;
+      background:#fff;
+    }
+    tr:hover td{background:#fbfdff}
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#f8fafc;
+      font-size:12px;
+      color:#0f172a;
+    }
+    .tag.ok{background:#dcfce7;border-color:#bbf7d0;color:#14532d}
+    .tag.wait{background:#fff7ed;border-color:#fed7aa;color:#7c2d12}
+    .tag.bad{background:#fee2e2;border-color:#fecaca;color:#7f1d1d}
 
-button{
-border:none;
-padding:10px 15px;
-border-radius:8px;
-cursor:pointer;
-}
+    .mini{
+      display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+    }
+    .mini button{padding:8px 10px;border-radius:10px;font-size:12px}
+    .danger{background:var(--bad);color:#fff}
+    .wa{background:#25D366;color:#fff}
+    .copy{background:#0ea5e9;color:#fff}
 
-.refresh{
-background:#ff7a00;
-color:#fff;
-}
+    /* Login modal */
+    .overlay{
+      position:fixed;inset:0;
+      background:rgba(2,6,23,.55);
+      display:flex;align-items:center;justify-content:center;
+      padding:16px;
+    }
+    .login{
+      max-width:420px;width:100%;
+      background:#fff;border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      border:1px solid #eef2f7;
+    }
+    .login h2{margin:0 0 6px}
+    .login p{margin:0 0 12px;color:var(--muted);font-size:13px}
+    .login .row{display:flex;gap:10px;margin-top:10px}
+    .login .row button{flex:1}
 
-.logout{
-background:#0b1a2e;
-color:#fff;
-}
-
-.export{
-background:#28a745;
-color:#fff;
-}
-
-input{
-padding:10px;
-width:100%;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th{
-background:#0b1a2e;
-color:#fff;
-padding:10px;
-}
-
-td{
-padding:10px;
-border-bottom:1px solid #ddd;
-text-align:center;
-}
-
-.delete{
-background:red;
-color:#fff;
-padding:5px 10px;
-border-radius:6px;
-cursor:pointer;
-}
-
-.status{
-margin-bottom:10px;
-font-weight:bold;
-}
-
-.login{
-background:#fff;
-padding:20px;
-border-radius:10px;
-max-width:400px;
-margin:auto;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-
-.login button{
-width:100%;
-background:#ff7a00;
-color:#fff;
-}
-
-</style>
-
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      color:#64748b;
+      line-height:1.6;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      padding:10px;
+      border-radius:14px;
+    }
+  </style>
 </head>
+
 <body>
+<div class="wrap">
 
-<div id="loginBox" class="login">
+  <!-- LOGIN -->
+  <div id="overlay" class="overlay" style="display:none;">
+    <div class="login">
+      <h2>تسجيل دخول Admin</h2>
+      <p>أدخل كلمة السر للوصول للطلبات.</p>
+      <input id="pass" type="password" placeholder="كلمة السر" />
+      <div class="row">
+        <button class="btn-brand" onclick="doLogin()">دخول</button>
+        <button class="btn-ghost" onclick="setDemoPass()">تجربة</button>
+      </div>
+      <div id="loginMsg" class="hint" style="display:none;"></div>
+      <div class="hint">
+        ✅ نصيحة: غير كلمة السر من الكود (ADMIN_PASSWORD).<br/>
+        ✅ إذا ظهر خطأ CORS، لازم تفعّل CORS في backend.
+      </div>
+    </div>
+  </div>
 
-<h3>تسجيل دخول</h3>
+  <!-- MAIN -->
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <h1>لوحة تحكم منصة أشير - Admin Super</h1>
+        <span class="badge" id="backendBadge">Backend: ...</span>
+        <div class="sub" id="subInfo">جاهز</div>
+      </div>
+      <div class="actions">
+        <button class="btn-ghost" onclick="openOrderPage()">صفحة الطلب</button>
+        <button class="btn-brand" onclick="load()">تحديث</button>
+        <button class="btn-ok" onclick="exportCSV()">تصدير CSV</button>
+        <button class="btn-dark" onclick="logout()">خروج</button>
+      </div>
+    </div>
 
-<input type="password" id="pass" placeholder="كلمة السر">
+    <div class="grid">
+      <div class="field">
+        <label>بحث (اسم / هاتف / مدينة / ملاحظة)</label>
+        <input id="q" placeholder="مثال: حسين أو 0666 أو Ghardaia ..." oninput="render()" />
+      </div>
 
-<button onclick="login()">دخول</button>
+      <div class="field">
+        <label>فلترة حسب الحالة</label>
+        <select id="statusFilter" onchange="render()">
+          <option value="">الكل</option>
+          <option value="new">جديد</option>
+          <option value="contacted">تم التواصل</option>
+          <option value="done">مكتمل</option>
+          <option value="canceled">ملغى</option>
+        </select>
+      </div>
 
-<p id="loginStatus"></p>
+      <div class="field">
+        <label>ترتيب حسب</label>
+        <select id="sortBy" onchange="render()">
+          <option value="newest">الأحدث</option>
+          <option value="oldest">الأقدم</option>
+          <option value="name">الاسم</option>
+          <option value="city">المدينة</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>إعدادات الحماية (اختياري)</label>
+        <input id="token" placeholder="TOKEN (اختياري)" oninput="saveToken()" />
+      </div>
+    </div>
+
+    <div class="statusbar">
+      <div class="pill">عدد الطلبات: <strong id="count">0</strong></div>
+      <div class="msg" id="msg">...</div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الهاتف</th>
+            <th>المدينة</th>
+            <th>نوع الطلب</th>
+            <th>ملاحظة</th>
+            <th>التاريخ</th>
+            <th>الحالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
-
-
-<div id="adminBox" class="box" style="display:none;">
-
-<h2>لوحة تحكم منصة أشير</h2>
-
-<div class="top">
-
-<button class="refresh" onclick="load()">تحديث</button>
-
-<button class="export" onclick="exportCSV()">Export CSV</button>
-
-<button class="logout" onclick="logout()">خروج</button>
-
-</div>
-
-<input id="search" placeholder="بحث بالاسم أو الهاتف أو المدينة" onkeyup="render()">
-
-<p class="status" id="status">جاري التحميل...</p>
-
-<table>
-
-<thead>
-<tr>
-<th>الاسم</th>
-<th>الهاتف</th>
-<th>المدينة</th>
-<th>نوع الطلب</th>
-<th>التاريخ</th>
-<th>حذف</th>
-</tr>
-</thead>
-
-<tbody id="orders"></tbody>
-
-</table>
-
-</div>
-
 
 <script>
+/* =========================
+   إعدادات مهمة
+========================= */
 
-const BACKEND="https://achir-backend-1.onrender.com";
-const API=BACKEND+"/api/orders";
+// ✅ غيّر Backend هنا
+const BACKEND = "https://achir-backend-1.onrender.com";
 
-let DATA=[];
+// مسارات API (لازم تكون موجودة في backend)
+const API_ORDERS = BACKEND + "/api/orders";
 
+// ✅ كلمة السر (غيرها)
+const ADMIN_PASSWORD = "admin47";
 
-// login
+// تسجيل دخول بسيط
+const LS_KEY = "achir_admin_ok";
+const LS_TOKEN = "achir_admin_token";
 
-function login(){
+/* =========================
+   حالة التطبيق
+========================= */
+let DATA = [];
 
-let p=document.getElementById("pass").value;
+// UI init
+document.getElementById("backendBadge").textContent = "Backend: " + BACKEND;
+document.getElementById("token").value = localStorage.getItem(LS_TOKEN) || "";
 
-if(p==="admin47"){
+// show login if not authed
+init();
 
-localStorage.setItem("admin","1");
-
-showAdmin();
-
-}else{
-
-document.getElementById("loginStatus").innerHTML="كلمة سر خاطئة";
-
+function init(){
+  if(localStorage.getItem(LS_KEY) === "1"){
+    document.getElementById("overlay").style.display = "none";
+    load();
+  }else{
+    document.getElementById("overlay").style.display = "flex";
+  }
 }
 
+function setDemoPass(){
+  document.getElementById("pass").value = ADMIN_PASSWORD;
 }
 
-
-// logout
+function doLogin(){
+  const p = document.getElementById("pass").value.trim();
+  if(p === ADMIN_PASSWORD){
+    localStorage.setItem(LS_KEY,"1");
+    document.getElementById("overlay").style.display="none";
+    load();
+  }else{
+    const el = document.getElementById("loginMsg");
+    el.style.display="block";
+    el.textContent="❌ كلمة السر خاطئة.";
+  }
+}
 
 function logout(){
-
-localStorage.removeItem("admin");
-
-location.reload();
-
+  localStorage.removeItem(LS_KEY);
+  location.reload();
 }
 
-
-// show admin
-
-function showAdmin(){
-
-document.getElementById("loginBox").style.display="none";
-document.getElementById("adminBox").style.display="block";
-
-load();
-
+function saveToken(){
+  localStorage.setItem(LS_TOKEN, document.getElementById("token").value.trim());
 }
 
-
-// load orders
-
-function load(){
-
-document.getElementById("status").innerHTML="جاري التحميل...";
-
-fetch(API)
-
-.then(r=>r.json())
-
-.then(d=>{
-
-DATA=d;
-
-document.getElementById("status").innerHTML="عدد الطلبات: "+d.length;
-
-render();
-
-})
-
-.catch(()=>{
-
-document.getElementById("status").innerHTML="فشل الاتصال بالBackend";
-
-});
-
+function openOrderPage(){
+  // إذا عندك صفحة الطلب في نفس GitHub Pages اسمها index.html
+  // عدلها إذا اسمها مختلف
+  const base = location.href.split("/").slice(0,-1).join("/");
+  window.open(base + "/index.html", "_blank");
 }
 
+/* =========================
+   Helpers
+========================= */
+function headers(){
+  const t = (localStorage.getItem(LS_TOKEN) || "").trim();
+  const h = { "Content-Type":"application/json" };
+  if(t) h["Authorization"] = "Bearer " + t;
+  return h;
+}
 
-// render
+function safe(v){ return (v ?? "").toString(); }
+
+function formatDate(v){
+  if(!v) return "";
+  try{
+    const d = new Date(v);
+    if(isNaN(d)) return safe(v);
+    return d.toLocaleString("ar-DZ");
+  }catch{ return safe(v); }
+}
+
+function statusTag(st){
+  const m = {
+    new:{txt:"جديد", cls:"wait"},
+    contacted:{txt:"تم التواصل", cls:"ok"},
+    done:{txt:"مكتمل", cls:"ok"},
+    canceled:{txt:"ملغى", cls:"bad"},
+  };
+  const x = m[st] || {txt: st || "—", cls:""};
+  return `<span class="tag ${x.cls}">${x.txt}</span>`;
+}
+
+function toWhatsApp(phone, text){
+  const p = (phone||"").replace(/\s+/g,"");
+  const msg = encodeURIComponent(text||"");
+  // wa.me يعمل حتى لو الرقم محلي، الأفضل رقم دولي +213...
+  return `https://wa.me/${p}?text=${msg}`;
+}
+
+async function copyText(t){
+  try{
+    await navigator.clipboard.writeText(t);
+    toast("✅ تم النسخ");
+  }catch{
+    prompt("انسخ هذا النص:", t);
+  }
+}
+
+function toast(t){
+  document.getElementById("msg").textContent = t;
+  setTimeout(()=>{ document.getElementById("msg").textContent = "جاهز"; }, 2200);
+}
+
+/* =========================
+   API
+========================= */
+async function load(){
+  document.getElementById("msg").textContent = "⏳ جاري التحميل...";
+  try{
+    const res = await fetch(API_ORDERS, { headers: headers() });
+    if(!res.ok){
+      const txt = await res.text();
+      throw new Error(txt || ("HTTP " + res.status));
+    }
+    const data = await res.json();
+    DATA = Array.isArray(data) ? data : (data.items || []);
+    document.getElementById("count").textContent = DATA.length;
+    document.getElementById("msg").textContent = "✅ تم التحميل";
+    render();
+  }catch(e){
+    document.getElementById("msg").textContent = "❌ فشل الاتصال: " + (e?.message || e);
+    document.getElementById("rows").innerHTML =
+      `<tr><td colspan="8" style="color:#b91c1c;font-weight:700">فشل الاتصال بالـ Backend</td></tr>`;
+  }
+}
+
+function currentView(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const st = document.getElementById("statusFilter").value;
+  const sortBy = document.getElementById("sortBy").value;
+
+  let arr = DATA.slice();
+
+  // filter search
+  if(q){
+    arr = arr.filter(o=>{
+      const all = [
+        safe(o.name), safe(o.phone), safe(o.city),
+        safe(o.note), safe(o.type), safe(o.status)
+      ].join(" ").toLowerCase();
+      return all.includes(q);
+    });
+  }
+
+  // filter status
+  if(st){
+    arr = arr.filter(o => safe(o.status) === st);
+  }
+
+  // sort
+  arr.sort((a,b)=>{
+    if(sortBy==="oldest"){
+      return new Date(a.date||0) - new Date(b.date||0);
+    }
+    if(sortBy==="name"){
+      return safe(a.name).localeCompare(safe(b.name), "ar");
+    }
+    if(sortBy==="city"){
+      return safe(a.city).localeCompare(safe(b.city), "ar");
+    }
+    // newest default
+    return new Date(b.date||0) - new Date(a.date||0);
+  });
+
+  return arr;
+}
 
 function render(){
+  const arr = currentView();
+  document.getElementById("count").textContent = arr.length;
 
-let s=document.getElementById("search").value.toLowerCase();
+  if(arr.length === 0){
+    document.getElementById("rows").innerHTML =
+      `<tr><td colspan="8" style="color:#64748b">لا توجد طلبات</td></tr>`;
+    return;
+  }
 
-let html="";
+  let html="";
+  arr.forEach(o=>{
+    const id = safe(o.id || o._id);
+    const name = safe(o.name);
+    const phone = safe(o.phone);
+    const city = safe(o.city);
+    const type = safe(o.type);
+    const note = safe(o.note);
+    const date = formatDate(o.date);
+    const st = safe(o.status || "new");
 
-DATA.filter(o=>
+    const waText = `مرحبا ${name}، بخصوص طلبك على منصة أشير.\nالمدينة: ${city}\nالهاتف: ${phone}\nنوع الطلب: ${type}\nملاحظة: ${note}`;
 
-(o.name||"").toLowerCase().includes(s)||
-(o.phone||"").toLowerCase().includes(s)||
-(o.city||"").toLowerCase().includes(s)
+    html += `
+      <tr>
+        <td>${name}</td>
+        <td>${phone}</td>
+        <td>${city}</td>
+        <td>${type}</td>
+        <td>${note}</td>
+        <td>${date}</td>
+        <td>${statusTag(st)}</td>
+        <td>
+          <div class="mini">
+            <button class="wa" onclick="window.open('${toWhatsApp(phone, waText)}','_blank')">واتساب</button>
+            <button class="copy" onclick="copyText('${phone.replace(/'/g,"\\'")}')">نسخ هاتف</button>
+            <button class="btn-ghost" onclick="setStatus('${id}','contacted')">تم التواصل</button>
+            <button class="btn-ghost" onclick="setStatus('${id}','done')">مكتمل</button>
+            <button class="danger" onclick="delOrder('${id}')">حذف</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
 
-).forEach(o=>{
-
-html+=`
-
-<tr>
-
-<td>${o.name||""}</td>
-<td>${o.phone||""}</td>
-<td>${o.city||""}</td>
-<td>${o.type||""}</td>
-<td>${o.date||""}</td>
-
-<td>
-
-<button class="delete"
-onclick="del('${o.id}')">
-
-حذف
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-document.getElementById("orders").innerHTML=html;
-
+  document.getElementById("rows").innerHTML = html;
 }
 
+async function delOrder(id){
+  if(!id) return;
+  if(!confirm("هل تريد حذف الطلب نهائياً؟")) return;
 
-// delete
-
-function del(id){
-
-if(!confirm("حذف الطلب؟")) return;
-
-fetch(API+"/"+id,{method:"DELETE"})
-.then(()=>load());
-
+  try{
+    const res = await fetch(API_ORDERS + "/" + encodeURIComponent(id), {
+      method:"DELETE",
+      headers: headers()
+    });
+    if(!res.ok){
+      const txt = await res.text();
+      throw new Error(txt || ("HTTP " + res.status));
+    }
+    toast("✅ تم الحذف");
+    await load();
+  }catch(e){
+    toast("❌ فشل الحذف: " + (e?.message || e));
+  }
 }
 
+/* =========
+   تغيير الحالة (يتطلب أن backend يدعم PUT/PATCH)
+   إذا لم يكن مدعوم: تجاهل (سيعطي خطأ)
+========= */
+async function setStatus(id, status){
+  if(!id) return;
+  try{
+    const res = await fetch(API_ORDERS + "/" + encodeURIComponent(id),{
+      method:"PATCH",
+      headers: headers(),
+      body: JSON.stringify({ status })
+    });
 
-// export CSV
+    // بعض الباكندات لا تدعم PATCH، جرّب PUT
+    if(!res.ok){
+      const res2 = await fetch(API_ORDERS + "/" + encodeURIComponent(id),{
+        method:"PUT",
+        headers: headers(),
+        body: JSON.stringify({ status })
+      });
+      if(!res2.ok){
+        const txt = await res2.text();
+        throw new Error(txt || ("HTTP " + res2.status));
+      }
+    }
 
+    toast("✅ تم تحديث الحالة");
+    await load();
+  }catch(e){
+    toast("⚠️ لم يتم تحديث الحالة (الـ backend قد لا يدعم PATCH/PUT): " + (e?.message || e));
+  }
+}
+
+/* =========================
+   Export CSV
+========================= */
 function exportCSV(){
+  const arr = currentView();
+  const rows = [
+    ["name","phone","city","type","note","date","status","id"]
+  ];
 
-let csv="name,phone,city,type,date\n";
+  arr.forEach(o=>{
+    rows.push([
+      safe(o.name), safe(o.phone), safe(o.city),
+      safe(o.type), safe(o.note),
+      safe(o.date), safe(o.status),
+      safe(o.id || o._id)
+    ]);
+  });
 
-DATA.forEach(o=>{
+  const csv = rows.map(r => r.map(cell=>{
+    const s = safe(cell).replace(/"/g,'""');
+    return `"${s}"`;
+  }).join(",")).join("\n");
 
-csv+=`${o.name},${o.phone},${o.city},${o.type},${o.date}\n`;
-
-});
-
-let blob=new Blob([csv]);
-let a=document.createElement("a");
-
-a.href=URL.createObjectURL(blob);
-a.download="orders.csv";
-
-a.click();
-
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "orders-super.csv";
+  a.click();
+  toast("✅ تم تصدير CSV");
 }
-
-
-// auto login
-
-if(localStorage.getItem("admin")){
-
-showAdmin();
-
-}
-
 </script>
-
 </body>
-</html>
+          </html>
