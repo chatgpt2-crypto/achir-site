@@ -1,267 +1,291 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>لوحة تحكم منصة أشير</title>
-  <style>
-    :root{
-      --bg:#f6f8fc;--card:#fff;--text:#0f172a;--muted:#64748b;
-      --brand:#ff6b00;--brand2:#0b1a2e;--border:#e5e7eb;--ok:#16a34a;--bad:#ef4444;
-      --r:18px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
-    .wrap{max-width:1100px;margin:0 auto;padding:18px}
-    .top{
-      background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;
-      box-shadow:0 10px 28px rgba(2,6,23,.06);
-      display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
-    }
-    .title h1{margin:0;font-size:20px}
-    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:0;border-radius:14px;padding:10px 14px;font-weight:800;cursor:pointer
-    }
-    .btn.primary{background:var(--brand);color:#fff}
-    .btn.dark{background:var(--brand2);color:#fff}
-    .btn.gray{background:#eef2ff;color:#0b1a2e;border:1px solid #e0e7ff}
-    .card{
-      margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);
-      padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.06)
-    }
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    input{
-      padding:12px;border-radius:14px;border:1px solid var(--border);min-width:240px;outline:none
-    }
-    input:focus{border-color:#c7d2fe;box-shadow:0 0 0 4px rgba(99,102,241,.08)}
-    .pill{padding:8px 10px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);font-size:12px;color:var(--muted)}
-    .msg{margin-top:10px;font-size:13px}
-    .ok{color:var(--ok);font-weight:800}
-    .bad{color:var(--bad);font-weight:800}
-    table{width:100%;border-collapse:separate;border-spacing:0;margin-top:12px;overflow:hidden;border-radius:14px;border:1px solid var(--border)}
-    th,td{padding:12px;border-bottom:1px solid var(--border);text-align:center;font-size:13px}
-    th{background:var(--brand2);color:#fff;font-weight:900}
-    tr:last-child td{border-bottom:0}
-    .danger{background:#ef4444;color:#fff;border:0;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
-    .wa{background:#22c55e;color:#fff;border:0;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
-    .small{font-size:12px;color:var(--muted)}
-    .loginBox{display:grid;gap:10px;max-width:460px;margin:0 auto}
-  </style>
+<meta charset="UTF-8">
+<title>لوحة تحكم منصة أشير</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+padding:20px;
+}
+
+.box{
+background:#fff;
+padding:20px;
+border-radius:12px;
+max-width:1000px;
+margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+flex-wrap:wrap;
+gap:10px;
+}
+
+button{
+background:#0b1a2e;
+color:#fff;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button.delete{
+background:red;
+}
+
+button.refresh{
+background:orange;
+}
+
+input{
+padding:8px;
+width:100%;
+margin-bottom:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#0b1a2e;
+color:#fff;
+}
+
+.status{
+margin-bottom:10px;
+}
+
+.login{
+max-width:400px;
+margin:auto;
+}
+
+</style>
+
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="title">
-        <h1>لوحة تحكم منصة أشير</h1>
-        <p class="small" id="apiText">Backend: —</p>
-      </div>
-      <div class="actions">
-        <button class="btn gray" onclick="goOrder()">صفحة الطلب</button>
-        <button class="btn primary" onclick="loadOrders()">تحديث</button>
-        <button class="btn dark" onclick="exportExcel()">تصدير Excel</button>
-        <button class="btn gray" onclick="logout()">خروج</button>
-      </div>
-    </div>
 
-    <div class="card" id="loginCard">
-      <h3 style="margin:0 0 6px">تسجيل دخول</h3>
-      <p class="small">أدخل كلمة السر للوصول للطلبات (محمية).</p>
-      <div class="loginBox">
-        <input id="password" type="password" placeholder="كلمة السر" />
-        <button class="btn primary" onclick="login()">دخول</button>
-        <div class="msg" id="loginMsg"></div>
-      </div>
-    </div>
+<div class="box login" id="loginBox">
 
-    <div class="card" id="dataCard" style="display:none">
-      <div class="row">
-        <div class="pill" id="countPill">عدد الطلبات: 0</div>
-        <input id="q" placeholder="بحث بالاسم/الهاتف/المدينة..." oninput="render()" />
-      </div>
+<h2>تسجيل دخول</h2>
 
-      <div class="msg" id="msg"></div>
+<input id="password" placeholder="كلمة السر">
 
-      <table>
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>الهاتف</th>
-            <th>المدينة</th>
-            <th>نوع الطلب</th>
-            <th>ملاحظة</th>
-            <th>التاريخ</th>
-            <th>واتساب</th>
-            <th>حذف</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
-  </div>
+<button onclick="login()">دخول</button>
+
+</div>
+
+
+<div class="box" id="adminBox" style="display:none;">
+
+<h2>لوحة تحكم منصة أشير</h2>
+
+<div class="top">
+
+<button onclick="load()" class="refresh">تحديث</button>
+
+<button onclick="logout()">خروج</button>
+
+</div>
+
+<div class="status" id="status">
+جاري التحميل...
+</div>
+
+<input id="search" placeholder="بحث..." onkeyup="search()">
+
+<table>
+
+<tr>
+<th>الاسم</th>
+<th>الهاتف</th>
+<th>المدينة</th>
+<th>نوع الطلب</th>
+<th>التاريخ</th>
+<th>حذف</th>
+</tr>
+
+<tbody id="orders"></tbody>
+
+</table>
+
+</div>
+
+
 
 <script>
-  // ✅ عدّل هذا فقط إذا تغير رابط Render
-  const BACKEND = "https://achir-backend.onrender.com";
-  const API_HEALTH = BACKEND + "/api/health";
-  const API_LOGIN  = BACKEND + "/api/login";
-  const API_ORDERS = BACKEND + "/api/orders";
-  const API_EXPORT = BACKEND + "/api/orders/export";
 
-  document.getElementById("apiText").textContent = "Backend: " + BACKEND;
+const BACKEND = "https://achir-backend-1.onrender.com";
+const API = BACKEND + "/api/orders";
 
-  let TOKEN = localStorage.getItem("ACHIR_TOKEN") || "";
-  let ORDERS = [];
+let DATA = [];
 
-  function goOrder(){ window.location.href = "./index.html"; }
 
-  function setMsg(text, ok=true){
-    const el = document.getElementById("msg");
-    el.innerHTML = ok ? `<span class="ok">✅ ${text}</span>` : `<span class="bad">❌ ${text}</span>`;
-  }
-  function setLoginMsg(text, ok=true){
-    const el = document.getElementById("loginMsg");
-    el.innerHTML = ok ? `<span class="ok">✅ ${text}</span>` : `<span class="bad">❌ ${text}</span>`;
-  }
+function login(){
 
-  function authHeaders(){
-    return { "Authorization": "Bearer " + TOKEN };
-  }
+let pass = document.getElementById("password").value;
 
-  async function login(){
-    const password = document.getElementById("password").value.trim();
-    if(!password){ setLoginMsg("أدخل كلمة السر", false); return; }
+if(pass=="123456"){
 
-    try{
-      const r = await fetch(API_LOGIN,{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ password })
-      });
-      const d = await r.json().catch(()=> ({}));
-      if(!r.ok){ setLoginMsg(d?.error || "فشل الدخول", false); return; }
+localStorage.setItem("admin","ok");
 
-      TOKEN = d.token;
-      localStorage.setItem("ACHIR_TOKEN", TOKEN);
-      setLoginMsg("تم تسجيل الدخول", true);
+showAdmin();
 
-      document.getElementById("loginCard").style.display="none";
-      document.getElementById("dataCard").style.display="block";
-      await loadOrders();
-    }catch(e){
-      setLoginMsg("فشل الاتصال بالـ Backend", false);
-    }
-  }
+}
 
-  function logout(){
-    localStorage.removeItem("ACHIR_TOKEN");
-    TOKEN="";
-    location.reload();
-  }
+else{
 
-  async function loadOrders(){
-    try{
-      const r = await fetch(API_ORDERS, { headers: authHeaders() });
-      const d = await r.json().catch(()=> ({}));
-      if(!r.ok){
-        setMsg(d?.error || "لا يمكن تحميل الطلبات", false);
-        if(d?.error?.includes("token") || r.status===401){
-          document.getElementById("loginCard").style.display="block";
-          document.getElementById("dataCard").style.display="none";
-        }
-        return;
-      }
-      ORDERS = Array.isArray(d) ? d : [];
-      document.getElementById("countPill").textContent = "عدد الطلبات: " + ORDERS.length;
-      setMsg("تم التحميل", true);
-      render();
-    }catch(e){
-      setMsg("فشل الاتصال بالـ Backend", false);
-    }
-  }
+alert("كلمة السر خاطئة");
 
-  function render(){
-    const q = (document.getElementById("q").value || "").toLowerCase().trim();
-    const list = q
-      ? ORDERS.filter(o => (
-          (o.name||"").toLowerCase().includes(q) ||
-          (o.phone||"").toLowerCase().includes(q) ||
-          (o.city||"").toLowerCase().includes(q) ||
-          (o.type||"").toLowerCase().includes(q) ||
-          (o.note||"").toLowerCase().includes(q)
-        ))
-      : ORDERS;
+}
 
-    const tbody = document.getElementById("rows");
-    tbody.innerHTML = list.map(o => {
-      const date = o.created_at ? new Date(o.created_at).toLocaleString() : "";
-      const waText = encodeURIComponent(`مرحبا ${o.name||""}، بخصوص طلبك (${o.type||""}) في منصة أشير...`);
-      const wa = `https://wa.me/${(o.phone||"").replace(/^0/,'213') }?text=${waText}`;
-      return `
-        <tr>
-          <td>${escapeHtml(o.name||"")}</td>
-          <td>${escapeHtml(o.phone||"")}</td>
-          <td>${escapeHtml(o.city||"")}</td>
-          <td>${escapeHtml(o.type||"")}</td>
-          <td>${escapeHtml(o.note||"")}</td>
-          <td>${escapeHtml(date)}</td>
-          <td><button class="wa" onclick="openWa('${wa}')">واتساب</button></td>
-          <td><button class="danger" onclick="delOrder('${o.id}')">حذف</button></td>
-        </tr>
-      `;
-    }).join("");
-  }
+}
 
-  function openWa(url){ window.open(url, "_blank"); }
 
-  async function delOrder(id){
-    if(!confirm("تأكيد حذف الطلب؟")) return;
-    try{
-      const r = await fetch(API_ORDERS + "/" + id, { method:"DELETE", headers: authHeaders() });
-      const d = await r.json().catch(()=> ({}));
-      if(!r.ok){ setMsg(d?.error || "فشل الحذف", false); return; }
-      setMsg("تم الحذف", true);
-      await loadOrders();
-    }catch(e){
-      setMsg("فشل الاتصال", false);
-    }
-  }
+function logout(){
 
-  async function exportExcel(){
-    try{
-      const r = await fetch(API_EXPORT, { headers: authHeaders() });
-      if(!r.ok){
-        const d = await r.json().catch(()=> ({}));
-        setMsg(d?.error || "فشل التصدير", false);
-        return;
-      }
-      const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "orders.xlsx";
-      a.click();
-      URL.revokeObjectURL(url);
-      setMsg("تم تصدير Excel", true);
-    }catch(e){
-      setMsg("فشل الاتصال", false);
-    }
-  }
+localStorage.removeItem("admin");
 
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
+location.reload();
 
-  // Auto show if token موجود
-  (async ()=>{
-    try{ await fetch(API_HEALTH); }catch(e){}
-    if(TOKEN){
-      document.getElementById("loginCard").style.display="none";
-      document.getElementById("dataCard").style.display="block";
-      loadOrders();
-    }
-  })();
+}
+
+
+function showAdmin(){
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("adminBox").style.display="block";
+
+load();
+
+}
+
+
+if(localStorage.getItem("admin")=="ok"){
+
+showAdmin();
+
+}
+
+
+
+function load(){
+
+document.getElementById("status").innerHTML="جاري التحميل...";
+
+fetch(API)
+.then(r=>r.json())
+.then(data=>{
+
+DATA=data;
+
+document.getElementById("status").innerHTML="عدد الطلبات: "+data.length;
+
+render(data);
+
+})
+.catch(()=>{
+
+document.getElementById("status").innerHTML="فشل الاتصال";
+
+});
+
+}
+
+
+
+function render(list){
+
+let html="";
+
+list.forEach(o=>{
+
+html+=`
+<tr>
+
+<td>${o.name||""}</td>
+
+<td>${o.phone||""}</td>
+
+<td>${o.city||""}</td>
+
+<td>${o.type||""}</td>
+
+<td>${o.date||""}</td>
+
+<td>
+<button class="delete" onclick="del('${o.id}')">
+حذف
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById("orders").innerHTML=html;
+
+}
+
+
+
+function search(){
+
+let s=document.getElementById("search").value.toLowerCase();
+
+let f=DATA.filter(o=>
+
+(o.name||"").toLowerCase().includes(s)
+||
+(o.phone||"").includes(s)
+||
+(o.city||"").toLowerCase().includes(s)
+
+);
+
+render(f);
+
+}
+
+
+
+function del(id){
+
+if(!confirm("حذف الطلب؟"))return;
+
+fetch(API+"/"+id,{
+method:"DELETE"
+})
+.then(()=>load());
+
+}
+
 </script>
+
+
 </body>
 </html>
