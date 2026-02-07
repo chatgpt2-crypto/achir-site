@@ -1,494 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>لوحة التحكم - الطلبات</title>
-  <style>
-    :root{
-      --bg:#f6f7fb; --card:#fff; --text:#111827; --muted:#6b7280;
-      --brand:#ff7a00; --brand2:#f59e0b; --line:#e5e7eb;
-      --good:#16a34a; --bad:#dc2626; --shadow:0 10px 28px rgba(2,6,23,.10);
-      --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Tahoma, Arial; background:var(--bg); color:var(--text)}
-    a{color:inherit}
-    .wrap{max-width:1100px;margin:28px auto;padding:0 14px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم</title>
 
-    .top{
-      background:linear-gradient(135deg,#fff,#fff);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-      border:1px solid var(--line);
-    }
-    .h1{margin:0;font-size:26px}
-    .sub{margin:8px 0 0;color:var(--muted);font-size:14px;word-break:break-all}
+<style>
 
-    .bar{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      margin-top:14px;
-    }
-    .left, .right{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .btn{
-      border:none;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;
-      box-shadow:0 8px 18px rgba(2,6,23,.08);
-      transition:.15s transform;
-    }
-    .btn:active{transform:scale(.98)}
-    .btn.brand{background:var(--brand);color:#fff}
-    .btn.dark{background:#0f172a;color:#fff}
-    .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--text);box-shadow:none}
-    .btn.excel{background:#0ea5e9;color:#fff}
-    .input{
-      min-width:240px;flex:1;
-      background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;
-      outline:none;
-    }
-    .stat{
-      margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;
-    }
-    .pill{
-      background:#fff;border:1px dashed var(--line);border-radius:999px;
-      padding:10px 12px; color:var(--muted); font-size:13px;
-    }
-    .pill strong{color:var(--text)}
-    .msg{margin-top:12px;font-weight:700}
-    .msg.good{color:var(--good)}
-    .msg.bad{color:var(--bad)}
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
 
-    .grid{margin-top:16px; display:grid; grid-template-columns:repeat(12,1fr); gap:14px;}
-    .card{
-      grid-column:span 12;
-      background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
+header{
+background:#0b1d3a;
+color:white;
+padding:20px;
+text-align:center;
+font-size:22px;
+}
 
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:12px 12px;border-bottom:1px solid var(--line);text-align:right;font-size:14px}
-    th{background:#fafafa;color:#374151;font-weight:800}
-    td small{color:var(--muted)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start}
-    .mini{padding:10px 12px;border-radius:12px;font-weight:800;border:1px solid var(--line);background:#fff;cursor:pointer}
-    .mini.danger{border-color:#fecaca;background:#fff1f2;color:#991b1b}
-    .mini.ok{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
+.container{
+max-width:900px;
+margin:30px auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
 
-    .m-cards{display:none;padding:14px}
-    .m-card{
-      border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px;
-      background:#fff;
-    }
-    .row{display:flex;justify-content:space-between;gap:10px;padding:6px 0}
-    .k{color:var(--muted);font-size:13px}
-    .v{font-weight:800}
-    .m-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+table{
+width:100%;
+border-collapse:collapse;
+}
 
-    @media (max-width:760px){
-      table{display:none}
-      .m-cards{display:block}
-      .bar{gap:12px}
-      .input{min-width:100%}
-      .left,.right{width:100%}
-      .btn{width:100%}
-    }
+th{
+background:#0b1d3a;
+color:white;
+padding:10px;
+}
 
-    /* شاشة الدخول */
-    .login{
-      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;
-      background:radial-gradient(1000px 400px at 50% -10%, rgba(255,122,0,.25), transparent 60%),
-                 radial-gradient(800px 300px at 20% 10%, rgba(245,158,11,.18), transparent 55%),
-                 var(--bg);
-    }
-    .loginCard{
-      width:100%;max-width:420px;background:#fff;border:1px solid var(--line);
-      border-radius:22px;box-shadow:var(--shadow);padding:18px;
-    }
-    .logo{
-      width:52px;height:52px;border-radius:16px;
-      background:linear-gradient(135deg,var(--brand),var(--brand2));
-      box-shadow:0 10px 20px rgba(255,122,0,.25);
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:18px;
-      margin-bottom:10px;
-    }
-    .loginCard h2{margin:0 0 6px;font-size:22px}
-    .loginCard p{margin:0 0 12px;color:var(--muted);font-size:13px}
-    .loginCard .input{width:100%}
-    .err{margin-top:10px;color:var(--bad);font-weight:800}
-    .hint{margin-top:10px;color:var(--muted);font-size:12px}
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+}
 
-    /* نافذة تأكيد */
-    .modalBack{
-      position:fixed;inset:0;background:rgba(15,23,42,.55);
-      display:none;align-items:center;justify-content:center;padding:16px;
-      z-index:9999;
-    }
-    .modal{
-      width:100%;max-width:420px;background:#fff;border:1px solid var(--line);
-      border-radius:18px;box-shadow:var(--shadow);padding:14px;
-    }
-    .modal h3{margin:0 0 6px}
-    .modal p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.6}
-    .modal .actions{justify-content:space-between}
-  </style>
+button{
+padding:6px 10px;
+border:none;
+border-radius:4px;
+background:red;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
 <body>
-<script>
-/** ===== إعدادات ===== **/
-const API_BASE = "https://achir-backend.onrender.com";   // غيّرها إذا تغيّر الرابط
-const LOGIN_KEY = "achir_admin_session_v3";
 
-/** كلمة السر (غيّرها الآن) **/
-const ADMIN_PASSWORD = "ACHIR@2026";
+<header>
+لوحة تحكم منصة أشير
+</header>
 
-/** مسارات API (عدّلها إذا كانت مختلفة عندك) **/
-const PATH_ORDERS = "/orders";
-const PATH_DELETE = (id)=> `/orders/${id}`; // أو `/orders?id=${id}` حسب سيرفرك
+<div class="container">
 
-/** حماية الصفحة **/
-(function guard(){
-  const ok = sessionStorage.getItem(LOGIN_KEY) === "1";
-  if(!ok){
-    document.addEventListener("DOMContentLoaded", renderLogin);
-    document.write("<style>body{margin:0}</style>");
-  }
-})();
+<button onclick="loadOrders()">تحديث</button>
 
-function renderLogin(){
-  document.body.innerHTML = `
-    <div class="login">
-      <div class="loginCard">
-        <div class="logo">A</div>
-        <h2>تسجيل دخول لوحة التحكم</h2>
-        <p>أدخل كلمة السر لعرض الطلبات وإدارتها.</p>
-        <input id="pass" class="input" type="password" placeholder="كلمة السر" autocomplete="current-password" />
-        <button class="btn brand" style="width:100%;margin-top:10px" onclick="doLogin()">دخول</button>
-        <div id="err" class="err"></div>
-        <div class="hint">غيّر كلمة السر من داخل ملف <b>admin.html</b> (ADMIN_PASSWORD)</div>
-      </div>
-    </div>
-  `;
-  document.getElementById("pass").addEventListener("keydown", (e)=>{
-    if(e.key==="Enter") doLogin();
-  });
-}
+<table>
 
-function doLogin(){
-  const p = document.getElementById("pass").value.trim();
-  if(p === ADMIN_PASSWORD){
-    sessionStorage.setItem(LOGIN_KEY,"1");
-    location.reload();
-  }else{
-    document.getElementById("err").textContent = "كلمة السر خاطئة";
-  }
-}
+<thead>
+<tr>
+<th>الاسم</th>
+<th>الهاتف</th>
+<th>المدينة</th>
+<th>التاريخ</th>
+<th>حذف</th>
+</tr>
+</thead>
 
-function logout(){
-  sessionStorage.removeItem(LOGIN_KEY);
-  location.reload();
-}
-</script>
+<tbody id="orders"></tbody>
 
-<div class="wrap" id="app" style="display:none">
-  <div class="top">
-    <h1 class="h1">لوحة التحكم - الطلبات</h1>
-    <div class="sub">Backend: <span id="apiBase"></span></div>
+</table>
 
-    <div class="bar">
-      <div class="left">
-        <button class="btn brand" id="refreshBtn">تحديث</button>
-        <button class="btn excel" id="exportBtn">تصدير Excel</button>
-        <button class="btn dark" id="openApiBtn">فتح API</button>
-        <button class="btn ghost" onclick="logout()">خروج</button>
-      </div>
-      <div class="right" style="flex:1">
-        <input class="input" id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
-      </div>
-    </div>
-
-    <div class="stat">
-      <div class="pill">عدد الطلبات: <strong id="count">0</strong></div>
-      <div class="pill">آخر تحديث: <strong id="lastUpdate">-</strong></div>
-    </div>
-
-    <div id="status" class="msg"></div>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>الاسم</th>
-            <th>الهاتف</th>
-            <th>المدينة</th>
-            <th>ملاحظة</th>
-            <th>التاريخ</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-
-      <div class="m-cards" id="mCards"></div>
-    </div>
-  </div>
-</div>
-
-<!-- نافذة تأكيد الحذف -->
-<div class="modalBack" id="modalBack">
-  <div class="modal">
-    <h3>تأكيد الحذف</h3>
-    <p id="modalText"></p>
-    <div class="actions">
-      <button class="btn ghost" id="cancelDel">إلغاء</button>
-      <button class="btn brand" id="confirmDel" style="background:var(--bad)">حذف نهائياً</button>
-    </div>
-  </div>
 </div>
 
 <script>
-/** إظهار التطبيق بعد التأكد من الجلسة **/
-(function showApp(){
-  if(sessionStorage.getItem(LOGIN_KEY)==="1"){
-    document.getElementById("app").style.display = "block";
-    document.getElementById("apiBase").textContent = API_BASE;
-  }
-})();
 
-const refreshBtn = document.getElementById("refreshBtn");
-const openApiBtn  = document.getElementById("openApiBtn");
-const exportBtn = document.getElementById("exportBtn");
-const tbody = document.getElementById("tbody");
-const mCards = document.getElementById("mCards");
-const statusEl = document.getElementById("status");
-const searchEl = document.getElementById("search");
-const countEl = document.getElementById("count");
-const lastUpdateEl = document.getElementById("lastUpdate");
+const API_URL="https://achir-backend-1.onrender.com/api/orders";
 
-/* modal */
-const modalBack = document.getElementById("modalBack");
-const modalText = document.getElementById("modalText");
-const cancelDel = document.getElementById("cancelDel");
-const confirmDel = document.getElementById("confirmDel");
-
-let allOrders = [];
-let pendingDeleteId = null;
-
-openApiBtn?.addEventListener("click", ()=>{
-  window.open(API_BASE + PATH_ORDERS, "_blank");
-});
-
-refreshBtn?.addEventListener("click", loadOrders);
-exportBtn?.addEventListener("click", exportCSV);
-searchEl?.addEventListener("input", ()=>render(filterOrders(searchEl.value)));
-
-cancelDel.addEventListener("click", closeModal);
-modalBack.addEventListener("click", (e)=>{ if(e.target===modalBack) closeModal(); });
-confirmDel.addEventListener("click", async ()=>{
-  if(pendingDeleteId==null) return;
-  await deleteOrder(pendingDeleteId);
-  closeModal();
-});
-
-function setStatus(text, type){
-  statusEl.textContent = text || "";
-  statusEl.className = "msg " + (type || "");
-}
-
-function formatDate(s){
-  if(!s) return "-";
-  return String(s).replace("T"," ").replace("Z","");
-}
-
-function filterOrders(q){
-  q = (q||"").trim().toLowerCase();
-  if(!q) return allOrders;
-  return allOrders.filter(o=>{
-    const blob = `${o.id} ${o.name} ${o.phone} ${o.city} ${o.note} ${o.created_at}`.toLowerCase();
-    return blob.includes(q);
-  });
-}
-
-function escapeHtml(str){
-  return String(str ?? "").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
-
-/** ملاحظة مهمة:
-    Render أحياناً ينام ويصير بطيء أول طلب. **/
 async function loadOrders(){
-  setStatus("جاري جلب الطلبات...", "");
-  tbody.innerHTML = "";
-  mCards.innerHTML = "";
 
-  try{
-    const res = await fetch(API_BASE + PATH_ORDERS, { cache:"no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    allOrders = Array.isArray(data) ? data : [];
-    render(filterOrders(searchEl.value));
-    setStatus(`تم جلب ${allOrders.length} طلب.`, "good");
-    countEl.textContent = allOrders.length;
-    lastUpdateEl.textContent = new Date().toLocaleString("ar-DZ");
-  }catch(e){
-    setStatus("فشل الاتصال بالـ API. تأكد أن Render شغال وأن الرابط صحيح.", "bad");
-  }
-}
+const res=await fetch(API_URL);
+const data=await res.json();
 
-function render(list){
-  tbody.innerHTML = "";
-  mCards.innerHTML = "";
+let html="";
 
-  if(!list.length){
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#6b7280;padding:18px">لا توجد بيانات بعد...</td></tr>`;
-    mCards.innerHTML = `<div style="text-align:center;color:#6b7280;padding:18px">لا توجد بيانات بعد...</div>`;
-    countEl.textContent = 0;
-    return;
-  }
+data.forEach(o=>{
 
-  countEl.textContent = list.length;
+html+=`
+<tr>
+<td>${o.name}</td>
+<td>${o.phone}</td>
+<td>${o.city}</td>
+<td>${o.created_at}</td>
+<td>
+<button onclick="deleteOrder(${o.id})">
+حذف
+</button>
+</td>
+</tr>
+`;
 
-  for(const o of list){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><strong>${escapeHtml(o.id)}</strong></td>
-      <td>${escapeHtml(o.name)}</td>
-      <td>${escapeHtml(o.phone)}</td>
-      <td>${escapeHtml(o.city)}</td>
-      <td>${escapeHtml(o.note)}</td>
-      <td><small>${escapeHtml(formatDate(o.created_at))}</small></td>
-      <td>
-        <div class="actions">
-          <button class="mini ok" onclick="copyText('${escapeHtml(o.phone)}')">نسخ الهاتف</button>
-          <button class="mini" onclick="openWhats('${escapeHtml(o.phone)}')">واتساب</button>
-          <button class="mini danger" onclick="askDelete(${Number(o.id)})">حذف</button>
-        </div>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  }
+});
 
-  for(const o of list){
-    const div = document.createElement("div");
-    div.className = "m-card";
-    div.innerHTML = `
-      <div class="row"><div class="k">#</div><div class="v">${escapeHtml(o.id)}</div></div>
-      <div class="row"><div class="k">الاسم</div><div class="v">${escapeHtml(o.name)}</div></div>
-      <div class="row"><div class="k">الهاتف</div><div class="v">${escapeHtml(o.phone)}</div></div>
-      <div class="row"><div class="k">المدينة</div><div class="v">${escapeHtml(o.city)}</div></div>
-      <div class="row"><div class="k">ملاحظة</div><div class="v">${escapeHtml(o.note)}</div></div>
-      <div class="row"><div class="k">التاريخ</div><div class="v">${escapeHtml(formatDate(o.created_at))}</div></div>
-      <div class="m-actions">
-        <button class="mini ok" onclick="copyText('${escapeHtml(o.phone)}')">نسخ الهاتف</button>
-        <button class="mini" onclick="openWhats('${escapeHtml(o.phone)}')">واتساب</button>
-        <button class="mini danger" onclick="askDelete(${Number(o.id)})">حذف</button>
-      </div>
-    `;
-    mCards.appendChild(div);
-  }
-}
+document.getElementById("orders").innerHTML=html;
 
-function openWhats(phone){
-  const p = String(phone||"").replace(/\s+/g,"");
-  const url = "https://wa.me/" + (p.startsWith("213") ? p : ("213"+p.replace(/^0/,"")));
-  window.open(url, "_blank");
-}
-
-async function copyText(t){
-  try{
-    await navigator.clipboard.writeText(String(t||""));
-    setStatus("تم النسخ ✅", "good");
-    setTimeout(()=>setStatus("", ""), 1200);
-  }catch{
-    setStatus("لم أستطع النسخ (المتصفح يمنع).", "bad");
-    setTimeout(()=>setStatus("", ""), 1600);
-  }
-}
-
-/** ===== الحذف ===== **/
-function askDelete(id){
-  pendingDeleteId = id;
-  modalText.innerHTML = `هل تريد حذف الطلب رقم <b>${escapeHtml(id)}</b> نهائياً؟`;
-  modalBack.style.display = "flex";
-}
-function closeModal(){
-  modalBack.style.display = "none";
-  pendingDeleteId = null;
 }
 
 async function deleteOrder(id){
-  setStatus("جاري حذف الطلب...", "");
-  try{
-    // محاولة 1: DELETE /orders/:id
-    let res = await fetch(API_BASE + PATH_DELETE(id), { method:"DELETE" });
 
-    // إذا السيرفر لا يدعم DELETE، جرّب POST /orders/delete
-    if(!res.ok){
-      res = await fetch(API_BASE + "/orders/delete", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ id })
-      });
-    }
+await fetch(API_URL+"/"+id,{
+method:"DELETE"
+});
 
-    if(!res.ok) throw new Error("HTTP " + res.status);
-
-    setStatus("تم الحذف ✅", "good");
-
-    // تحديث محلي + إعادة عرض
-    allOrders = allOrders.filter(o => Number(o.id) !== Number(id));
-    render(filterOrders(searchEl.value));
-    countEl.textContent = allOrders.length;
-
-  }catch(e){
-    setStatus("فشل الحذف. لازم يكون السيرفر يدعم DELETE أو /orders/delete.", "bad");
-  }
-}
-
-/** ===== Excel (CSV) ===== **/
-function exportCSV(){
-  const list = filterOrders(searchEl.value);
-  if(!list.length){
-    setStatus("لا توجد بيانات للتصدير.", "bad");
-    return;
-  }
-
-  const headers = ["id","name","phone","city","note","created_at"];
-  const rows = list.map(o => headers.map(h => toCSVCell(o[h])));
-
-  // BOM عشان Excel يقرأ العربية صح
-  const bom = "\uFEFF";
-  const csv = bom + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-
-  const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `orders_${new Date().toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-
-  setStatus("تم تصدير الملف ✅ افتحه في Excel.", "good");
-  setTimeout(()=>setStatus("", ""), 1600);
-}
-
-function toCSVCell(v){
-  const s = String(v ?? "");
-  // لف داخل " " و هروب " "
-  return `"${s.replace(/"/g,'""')}"`;
-}
-
-/** تحميل تلقائي */
 loadOrders();
+
+}
+
+loadOrders();
+
 </script>
 
 </body>
-        </html>
+</html>
