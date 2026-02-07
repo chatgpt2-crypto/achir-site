@@ -2,168 +2,545 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>لوحة التحكم - الطلبات</title>
+
   <style>
-    body{font-family:system-ui,Segoe UI,Tahoma,Arial;margin:0;background:#f6f7fb;color:#111}
-    .wrap{max-width:1100px;margin:24px auto;padding:0 14px}
-    .card{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);padding:16px}
-    h1{margin:0 0 12px;font-size:22px}
-    .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    input,button{border-radius:10px;border:1px solid #e3e6ef;padding:10px 12px;font-size:14px}
-    input{min-width:220px;flex:1}
-    button{cursor:pointer;background:#ff7a00;color:#fff;border:none}
-    button.secondary{background:#111}
-    button.danger{background:#e53935}
-    button:disabled{opacity:.6;cursor:not-allowed}
-    .muted{color:#666;font-size:13px;margin-top:8px}
-    .table{width:100%;border-collapse:collapse;margin-top:14px}
-    .table th,.table td{padding:10px;border-bottom:1px solid #eef0f6;text-align:right;vertical-align:top}
-    .table th{font-size:13px;color:#444;background:#fafbff}
-    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1f4ff;color:#2b3a67;font-size:12px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .status{font-size:13px}
-    .ok{color:#1b5e20}
-    .bad{color:#b71c1c}
-    .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
-    @media (max-width:700px){
-      .table th:nth-child(6), .table td:nth-child(6){display:none;} /* اخفاء التاريخ على الشاشات الصغيرة */
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --accent:#f97316;
+      --accent2:#16a34a;
+      --danger:#ef4444;
+      --shadow: 0 10px 30px rgba(2,6,23,.08);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      max-width:1100px;
+      margin:32px auto;
+      padding:0 14px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    header{
+      padding:22px 18px 10px;
+      text-align:center;
+    }
+    h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      word-break:break-all;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      padding:14px 14px 18px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+      box-shadow: 0 6px 16px rgba(249,115,22,.25);
+      transition:.15s;
+      min-width:110px;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn.secondary{
+      background:#0f172a;
+      box-shadow:none;
+    }
+    .btn.danger{
+      background:var(--danger);
+      box-shadow:none;
+    }
+    .input{
+      width:min(520px, 100%);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px 14px;
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    .status{
+      text-align:center;
+      color:var(--accent2);
+      font-weight:700;
+      padding:0 16px 14px;
+      min-height:22px;
+    }
+    .status.err{color:var(--danger)}
+    .status.muted{color:var(--muted); font-weight:600}
+
+    .tableWrap{padding:0 12px 14px}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    thead th{
+      background:#f8fafc;
+      color:#0f172a;
+      padding:12px 10px;
+      font-size:13px;
+      border-bottom:1px solid var(--line);
+      text-align:right;
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+      font-size:14px;
+      color:#111827;
+    }
+    tbody tr:last-child td{border-bottom:none}
+    .muted{color:var(--muted); font-size:13px}
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .tag{
+      display:inline-block;
+      padding:4px 9px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      background:#fff;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      justify-content:center;
+      padding:10px 12px;
+      border:1px dashed var(--line);
+      border-radius:12px;
+      background:#fff;
+      color:var(--muted);
+      margin:0 auto 14px;
+      width:fit-content;
+      font-size:13px;
+    }
+
+    /* Modal */
+    .modalBack{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal{
+      width:min(520px, 100%);
+      background:#fff;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      border:1px solid var(--line);
+    }
+    .modalHead{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .modalTitle{font-weight:900}
+    .close{
+      border:none;
+      background:#f1f5f9;
+      border-radius:10px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .modalBody{padding:14px 16px; display:grid; gap:10px}
+    .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    .field input, .field textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      outline:none;
+      font-size:14px;
+    }
+    .field textarea{min-height:90px; resize:vertical}
+    .modalFoot{
+      padding:14px 16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      gap:10px;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width:640px){
+      h1{font-size:22px}
+      thead{display:none}
+      table, tbody, tr, td{display:block; width:100%}
+      tbody tr{
+        border-bottom:1px solid var(--line);
+        padding:10px 8px;
+      }
+      tbody td{
+        border:none;
+        padding:6px 4px;
+      }
+      tbody td::before{
+        content: attr(data-label);
+        display:block;
+        color:var(--muted);
+        font-size:12px;
+        margin-bottom:3px;
+      }
+      .actions{justify-content:flex-start}
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="top">
-        <div>
-          <h1>لوحة التحكم - الطلبات</h1>
-          <div class="muted">Backend: <span class="mono" id="baseUrlText"></span></div>
-        </div>
-        <div class="row">
-          <input id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
-          <button class="secondary" id="refreshBtn">تحديث</button>
-        </div>
+      <header>
+        <h1>لوحة التحكم - الطلبات</h1>
+        <div class="sub" id="backendLine"></div>
+      </header>
+
+      <div class="toolbar">
+        <button class="btn" id="refreshBtn">تحديث</button>
+        <input class="input" id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
+        <button class="btn secondary" id="openApiBtn">فتح API</button>
       </div>
 
-      <div class="muted status" id="status">جاهز</div>
+      <div class="status muted" id="status"></div>
 
-      <table class="table" aria-label="orders">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>الاسم</th>
-            <th>الهاتف</th>
-            <th>المدينة</th>
-            <th>ملاحظة</th>
-            <th>التاريخ</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="7" class="muted">لا توجد بيانات بعد...</td></tr>
-        </tbody>
-      </table>
+      <div class="tableWrap">
+        <div class="pill">
+          <span class="tag" id="countTag">0 طلب</span>
+          <span class="tag" id="timeTag">—</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70px">#</th>
+              <th>الاسم</th>
+              <th>الهاتف</th>
+              <th>المدينة</th>
+              <th>ملاحظة</th>
+              <th style="width:180px">التاريخ</th>
+              <th style="width:200px">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr>
+              <td colspan="7" class="muted" style="text-align:center;padding:18px">
+                لا توجد بيانات بعد...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-<script>
-  // ضع رابط الباكند هنا
-  const BASE_URL = "https://achir-backend.onrender.com";
-  document.getElementById("baseUrlText").textContent = BASE_URL;
+  <!-- Modal -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modalHead">
+        <div class="modalTitle">تعديل الطلب</div>
+        <button class="close" id="closeModal">×</button>
+      </div>
 
-  const tbody = document.getElementById("tbody");
-  const statusEl = document.getElementById("status");
-  const searchEl = document.getElementById("search");
-  const refreshBtn = document.getElementById("refreshBtn");
+      <div class="modalBody">
+        <div class="field">
+          <label>الاسم</label>
+          <input id="m_name" />
+        </div>
+        <div class="field">
+          <label>الهاتف</label>
+          <input id="m_phone" />
+        </div>
+        <div class="field">
+          <label>المدينة</label>
+          <input id="m_city" />
+        </div>
+        <div class="field">
+          <label>ملاحظة</label>
+          <textarea id="m_note"></textarea>
+        </div>
+        <div class="muted" id="m_meta"></div>
+      </div>
 
-  let allOrders = [];
+      <div class="modalFoot">
+        <button class="btn" id="saveBtn">حفظ</button>
+        <button class="btn danger" id="deleteBtn">حذف</button>
+        <button class="btn secondary" id="cancelBtn">إلغاء</button>
+      </div>
+    </div>
+  </div>
 
-  function setStatus(msg, ok=true){
-    statusEl.textContent = msg;
-    statusEl.className = "muted status " + (ok ? "ok" : "bad");
-  }
+  <script>
+    // ✅ ضع رابط الـ backend هنا فقط
+    // ملاحظة: نحن نستعمل endpoint الصحيح مباشرة: /api/orders
+    const API_BASE = "https://achir-backend.onrender.com";
+    const API_ORDERS = API_BASE + "/api/orders";
 
-  function esc(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    const backendLine = document.getElementById("backendLine");
+    backendLine.textContent = "Backend: " + API_BASE;
 
-  function render(list){
-    if(!list.length){
-      tbody.innerHTML = `<tr><td colspan="7" class="muted">لا توجد طلبات.</td></tr>`;
-      return;
+    const rowsEl = document.getElementById("rows");
+    const statusEl = document.getElementById("status");
+    const searchEl = document.getElementById("search");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const openApiBtn = document.getElementById("openApiBtn");
+
+    const countTag = document.getElementById("countTag");
+    const timeTag = document.getElementById("timeTag");
+
+    const modalBack = document.getElementById("modalBack");
+    const closeModal = document.getElementById("closeModal");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+
+    const m_name = document.getElementById("m_name");
+    const m_phone = document.getElementById("m_phone");
+    const m_city = document.getElementById("m_city");
+    const m_note = document.getElementById("m_note");
+    const m_meta = document.getElementById("m_meta");
+
+    let allOrders = [];
+    let currentOrder = null;
+
+    function setStatus(text, type="muted"){
+      statusEl.className = "status " + (type === "err" ? "err" : (type === "ok" ? "" : "muted"));
+      statusEl.textContent = text || "";
     }
-    tbody.innerHTML = list.map(o => `
-      <tr>
-        <td><span class="pill">#${esc(o.id)}</span></td>
-        <td>${esc(o.name)}</td>
-        <td class="mono">${esc(o.phone)}</td>
-        <td>${esc(o.city)}</td>
-        <td>${esc(o.note)}</td>
-        <td class="mono">${esc(o.created_at)}</td>
-        <td>
-          <div class="actions">
-            <button class="danger" onclick="deleteOrder(${Number(o.id)})">حذف</button>
-          </div>
-        </td>
-      </tr>
-    `).join("");
-  }
 
-  function applySearch(){
-    const q = searchEl.value.trim().toLowerCase();
-    if(!q) return render(allOrders);
-    const filtered = allOrders.filter(o => {
-      const hay = `${o.id} ${o.name} ${o.phone} ${o.city} ${o.note} ${o.created_at}`.toLowerCase();
-      return hay.includes(q);
-    });
-    render(filtered);
-  }
-
-  async function loadOrders(){
-    try{
-      setStatus("جاري جلب الطلبات...");
-      refreshBtn.disabled = true;
-      const res = await fetch(`${BASE_URL}/api/orders`, {cache:"no-store"});
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      allOrders = await res.json();
-      allOrders.sort((a,b)=> (b.id||0)-(a.id||0));
-      applySearch();
-      setStatus(`تم تحميل ${allOrders.length} طلب/طلبات ✅`, true);
-    }catch(e){
-      console.error(e);
-      setStatus("فشل جلب الطلبات ❌ (تأكد من رابط الباكند وأنه يعمل)", false);
-      tbody.innerHTML = `<tr><td colspan="7" class="muted bad">خطأ: ${esc(e.message)}</td></tr>`;
-    }finally{
-      refreshBtn.disabled = false;
+    function fmtDate(s){
+      if(!s) return "—";
+      // إذا التاريخ بصيغة SQL مثل 2026-02-07 12:18:12
+      // نحاول عرضه بشكل بسيط
+      return String(s).replace("T"," ").replace("Z","");
     }
-  }
 
-  async function deleteOrder(id){
-    if(!confirm("هل تريد حذف الطلب رقم #" + id + " ؟")) return;
-    try{
-      setStatus("جاري الحذف...");
-      const res = await fetch(`${BASE_URL}/api/orders/${id}`, { method:"DELETE" });
-      if(!res.ok) {
-        const txt = await res.text();
-        throw new Error(`فشل الحذف (HTTP ${res.status}) - ${txt}`);
+    function safe(v){ return (v ?? "").toString(); }
+
+    function filterOrders(q){
+      q = (q||"").trim().toLowerCase();
+      if(!q) return allOrders;
+      return allOrders.filter(o => {
+        const hay = [
+          safe(o.id),
+          safe(o.name),
+          safe(o.phone),
+          safe(o.city),
+          safe(o.note),
+          safe(o.created_at)
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    function render(){
+      const q = searchEl.value;
+      const data = filterOrders(q);
+
+      countTag.textContent = `${data.length} طلب`;
+      timeTag.textContent = `آخر تحديث: ${new Date().toLocaleString("ar-DZ")}`;
+
+      if(!data.length){
+        rowsEl.innerHTML = `
+          <tr>
+            <td colspan="7" class="muted" style="text-align:center;padding:18px">
+              لا توجد بيانات بعد...
+            </td>
+          </tr>
+        `;
+        return;
       }
-      // احذف من الواجهة مباشرة
-      allOrders = allOrders.filter(o => Number(o.id) !== Number(id));
-      applySearch();
-      setStatus("تم الحذف ✅", true);
-    }catch(e){
-      console.error(e);
-      setStatus("لم يتم الحذف ❌ (يجب تفعيل DELETE في الباكند)", false);
-      alert(e.message);
+
+      rowsEl.innerHTML = data.map((o, idx) => `
+        <tr>
+          <td data-label="#">${o.id ?? (idx+1)}</td>
+          <td data-label="الاسم"><strong>${safe(o.name) || "—"}</strong></td>
+          <td data-label="الهاتف">${safe(o.phone) || "—"}</td>
+          <td data-label="المدينة">${safe(o.city) || "—"}</td>
+          <td data-label="ملاحظة">${safe(o.note) || "—"}</td>
+          <td data-label="التاريخ"><span class="muted">${fmtDate(o.created_at)}</span></td>
+          <td data-label="إجراءات">
+            <div class="actions">
+              <button class="btn secondary" style="padding:9px 12px;min-width:auto" onclick="openEdit(${o.id})">تعديل</button>
+              <button class="btn" style="padding:9px 12px;min-width:auto;background:var(--accent2);box-shadow:none" onclick="copyText('${safe(o.phone)}')">نسخ الهاتف</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
     }
-  }
 
-  // expose deleteOrder
-  window.deleteOrder = deleteOrder;
+    async function fetchOrders(){
+      setStatus("جاري جلب الطلبات...", "muted");
+      try{
+        const res = await fetch(API_ORDERS, { method: "GET" });
+        if(!res.ok){
+          // 404 تعني غالباً endpoint خطأ أو backend لا يعمل
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        if(!Array.isArray(data)) throw new Error("الرد ليس قائمة");
 
-  searchEl.addEventListener("input", applySearch);
-  refreshBtn.addEventListener("click", loadOrders);
+        allOrders = data;
+        setStatus(`تم جلب ${data.length} طلب.`, "ok");
+        render();
+      }catch(e){
+        setStatus("تعذر جلب الطلبات. تأكد أن الرابط صحيح وأن Render يعمل. ("+ e.message +")", "err");
+        allOrders = [];
+        render();
+      }
+    }
 
-  loadOrders();
-</script>
+    // ====== Edit / Delete (اختياري) ======
+    // هذه الوظائف تحتاج أن يكون لديك endpoints في الباك اند:
+    // PUT /api/orders/:id
+    // DELETE /api/orders/:id
+    // إذا لم تكن موجودة، سيظهر خطأ عند الحفظ أو الحذف.
+    window.openEdit = function(id){
+      const o = allOrders.find(x => String(x.id) === String(id));
+      if(!o) return;
+
+      currentOrder = o;
+      m_name.value = safe(o.name);
+      m_phone.value = safe(o.phone);
+      m_city.value = safe(o.city);
+      m_note.value = safe(o.note);
+      m_meta.textContent = `ID: ${safe(o.id)} • ${fmtDate(o.created_at)}`;
+
+      modalBack.style.display = "flex";
+    }
+
+    function closeEdit(){
+      modalBack.style.display = "none";
+      currentOrder = null;
+    }
+
+    async function saveEdit(){
+      if(!currentOrder) return;
+
+      const payload = {
+        name: m_name.value.trim(),
+        phone: m_phone.value.trim(),
+        city: m_city.value.trim(),
+        note: m_note.value.trim()
+      };
+
+      setStatus("جاري الحفظ...", "muted");
+      try{
+        const res = await fetch(`${API_ORDERS}/${currentOrder.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        closeEdit();
+        await fetchOrders();
+        setStatus("تم الحفظ بنجاح ✅", "ok");
+      }catch(e){
+        setStatus("لم يتم الحفظ. إذا لم تضف PUT في الباك اند سيظهر هذا الخطأ. ("+e.message+")", "err");
+      }
+    }
+
+    async function deleteOrder(){
+      if(!currentOrder) return;
+      if(!confirm("هل تريد حذف هذا الطلب نهائياً؟")) return;
+
+      setStatus("جاري الحذف...", "muted");
+      try{
+        const res = await fetch(`${API_ORDERS}/${currentOrder.id}`, {
+          method: "DELETE"
+        });
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        closeEdit();
+        await fetchOrders();
+        setStatus("تم الحذف ✅", "ok");
+      }catch(e){
+        setStatus("لم يتم الحذف. إذا لم تضف DELETE في الباك اند سيظهر هذا الخطأ. ("+e.message+")", "err");
+      }
+    }
+
+    // ===== Helpers =====
+    window.copyText = async function(text){
+      try{
+        await navigator.clipboard.writeText(text || "");
+        setStatus("تم النسخ ✅", "ok");
+      }catch{
+        // fallback
+        const t = document.createElement("textarea");
+        t.value = text || "";
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+        setStatus("تم النسخ ✅", "ok");
+      }
+    }
+
+    // Events
+    refreshBtn.addEventListener("click", fetchOrders);
+    openApiBtn.addEventListener("click", () => window.open(API_ORDERS, "_blank"));
+    searchEl.addEventListener("input", render);
+
+    closeModal.addEventListener("click", closeEdit);
+    cancelBtn.addEventListener("click", closeEdit);
+    modalBack.addEventListener("click", (e) => { if(e.target === modalBack) closeEdit(); });
+
+    saveBtn.addEventListener("click", saveEdit);
+    deleteBtn.addEventListener("click", deleteOrder);
+
+    // Load
+    fetchOrders();
+  </script>
 </body>
-</html>
+  </html>
