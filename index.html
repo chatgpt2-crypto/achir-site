@@ -1,118 +1,128 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة أشير - الطلب</title>
+<title>منصة أشير</title>
 
 <style>
-
 body{
 font-family:Arial;
-background:#f4f6f9;
+background:#f3f5f9;
 margin:0;
+direction:rtl;
 }
 
-header{
-background:#0b1d3a;
+.header{
+background:linear-gradient(90deg,#0b1d3a,#102c5c);
 color:white;
 padding:20px;
 text-align:center;
-font-size:22px;
 }
 
 .container{
 max-width:500px;
-margin:30px auto;
+margin:20px auto;
 background:white;
 padding:20px;
 border-radius:10px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-input{
+input,textarea,select{
 width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:6px;
+padding:10px;
+margin:10px 0;
 border:1px solid #ccc;
+border-radius:6px;
 }
 
 button{
-width:100%;
-padding:14px;
-margin-top:15px;
-border:none;
-border-radius:6px;
 background:#ff7a00;
 color:white;
-font-size:18px;
+border:none;
+padding:12px;
+border-radius:6px;
 cursor:pointer;
+width:100%;
+font-size:16px;
 }
 
 button:hover{
-background:#e66d00;
+background:#e56f00;
 }
 
-.success{
-color:green;
-text-align:center;
+.admin-btn{
+background:#0b1d3a;
 margin-top:10px;
 }
-
 </style>
-
 </head>
 
 <body>
 
-<header>
-منصة أشير - صفحة الطلب
-</header>
+<div class="header">
+<h2>منصة أشير</h2>
+<p>إرسال طلب مباشر للوحة التحكم</p>
+</div>
 
 <div class="container">
 
+<h3>نموذج الطلب</h3>
+
 <input id="name" placeholder="الاسم">
-
 <input id="phone" placeholder="الهاتف">
-
 <input id="city" placeholder="المدينة">
+
+<select id="type">
+<option>طلب خدمة</option>
+<option>استفسار</option>
+<option>طلب منتج</option>
+</select>
+
+<textarea id="note" placeholder="ملاحظة"></textarea>
 
 <button onclick="sendOrder()">إرسال الطلب</button>
 
-<div class="success" id="msg"></div>
+<button class="admin-btn" onclick="openAdmin()">لوحة التحكم</button>
+
+<p id="result"></p>
 
 </div>
 
 <script>
 
-const API_URL="https://achir-backend-1.onrender.com/api/orders";
+const API="https://achir-backend-1.onrender.com/api/orders";
 
-async function sendOrder(){
+function sendOrder(){
 
-const name=document.getElementById("name").value;
-const phone=document.getElementById("phone").value;
-const city=document.getElementById("city").value;
+const data={
+name:document.getElementById("name").value,
+phone:document.getElementById("phone").value,
+city:document.getElementById("city").value,
+type:document.getElementById("type").value,
+note:document.getElementById("note").value
+};
 
-if(!name||!phone||!city){
-alert("املأ كل الحقول");
-return;
-}
-
-await fetch(API_URL,{
+fetch(API,{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-name,
-phone,
-city
+body:JSON.stringify(data)
 })
+.then(res=>res.json())
+.then(res=>{
+document.getElementById("result").innerHTML="✅ تم إرسال الطلب";
+})
+.catch(err=>{
+document.getElementById("result").innerHTML="❌ خطأ";
 });
 
-document.getElementById("msg").innerHTML="تم إرسال الطلب بنجاح";
+}
 
+function openAdmin(){
+window.location="admin.html";
 }
 
 </script>
