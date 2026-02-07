@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>لوحة تحكم منصة أشير</title>
@@ -23,38 +23,44 @@ box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 h2{
-text-align:center;
+margin-bottom:10px;
 }
 
 .top{
 display:flex;
-justify-content:space-between;
-margin-bottom:10px;
-flex-wrap:wrap;
 gap:10px;
+margin-bottom:15px;
+flex-wrap:wrap;
 }
 
 button{
-background:#0b1a2e;
-color:#fff;
 border:none;
-padding:8px 14px;
-border-radius:6px;
+padding:10px 15px;
+border-radius:8px;
 cursor:pointer;
 }
 
-button.delete{
-background:red;
+.refresh{
+background:#ff7a00;
+color:#fff;
 }
 
-button.refresh{
-background:orange;
+.logout{
+background:#0b1a2e;
+color:#fff;
+}
+
+.export{
+background:#28a745;
+color:#fff;
 }
 
 input{
-padding:8px;
+padding:10px;
 width:100%;
 margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
 }
 
 table{
@@ -62,24 +68,44 @@ width:100%;
 border-collapse:collapse;
 }
 
-th,td{
-padding:10px;
-border:1px solid #ddd;
-text-align:center;
-}
-
 th{
 background:#0b1a2e;
 color:#fff;
+padding:10px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+.delete{
+background:red;
+color:#fff;
+padding:5px 10px;
+border-radius:6px;
+cursor:pointer;
 }
 
 .status{
 margin-bottom:10px;
+font-weight:bold;
 }
 
 .login{
+background:#fff;
+padding:20px;
+border-radius:10px;
 max-width:400px;
 margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.login button{
+width:100%;
+background:#ff7a00;
+color:#fff;
 }
 
 </style>
@@ -87,37 +113,40 @@ margin:auto;
 </head>
 <body>
 
-<div class="box login" id="loginBox">
+<div id="loginBox" class="login">
 
-<h2>تسجيل دخول</h2>
+<h3>تسجيل دخول</h3>
 
-<input id="password" placeholder="كلمة السر">
+<input type="password" id="pass" placeholder="كلمة السر">
 
 <button onclick="login()">دخول</button>
+
+<p id="loginStatus"></p>
 
 </div>
 
 
-<div class="box" id="adminBox" style="display:none;">
+<div id="adminBox" class="box" style="display:none;">
 
 <h2>لوحة تحكم منصة أشير</h2>
 
 <div class="top">
 
-<button onclick="load()" class="refresh">تحديث</button>
+<button class="refresh" onclick="load()">تحديث</button>
 
-<button onclick="logout()">خروج</button>
+<button class="export" onclick="exportCSV()">Export CSV</button>
+
+<button class="logout" onclick="logout()">خروج</button>
 
 </div>
 
-<div class="status" id="status">
-جاري التحميل...
-</div>
+<input id="search" placeholder="بحث بالاسم أو الهاتف أو المدينة" onkeyup="render()">
 
-<input id="search" placeholder="بحث..." onkeyup="search()">
+<p class="status" id="status">جاري التحميل...</p>
 
 <table>
 
+<thead>
 <tr>
 <th>الاسم</th>
 <th>الهاتف</th>
@@ -126,6 +155,7 @@ margin:auto;
 <th>التاريخ</th>
 <th>حذف</th>
 </tr>
+</thead>
 
 <tbody id="orders"></tbody>
 
@@ -134,35 +164,36 @@ margin:auto;
 </div>
 
 
-
 <script>
 
-const BACKEND = "https://achir-backend-1.onrender.com";
-const API = BACKEND + "/api/orders";
+const BACKEND="https://achir-backend-1.onrender.com";
+const API=BACKEND+"/api/orders";
 
-let DATA = [];
+let DATA=[];
 
+
+// login
 
 function login(){
 
-let pass = document.getElementById("password").value;
+let p=document.getElementById("pass").value;
 
-if(pass=="123456"){
+if(p==="admin47"){
 
-localStorage.setItem("admin","ok");
+localStorage.setItem("admin","1");
 
 showAdmin();
 
-}
+}else{
 
-else{
-
-alert("كلمة السر خاطئة");
+document.getElementById("loginStatus").innerHTML="كلمة سر خاطئة";
 
 }
 
 }
 
+
+// logout
 
 function logout(){
 
@@ -173,10 +204,11 @@ location.reload();
 }
 
 
+// show admin
+
 function showAdmin(){
 
 document.getElementById("loginBox").style.display="none";
-
 document.getElementById("adminBox").style.display="block";
 
 load();
@@ -184,65 +216,74 @@ load();
 }
 
 
-if(localStorage.getItem("admin")=="ok"){
-
-showAdmin();
-
-}
-
-
+// load orders
 
 function load(){
 
 document.getElementById("status").innerHTML="جاري التحميل...";
 
 fetch(API)
+
 .then(r=>r.json())
-.then(data=>{
 
-DATA=data;
+.then(d=>{
 
-document.getElementById("status").innerHTML="عدد الطلبات: "+data.length;
+DATA=d;
 
-render(data);
+document.getElementById("status").innerHTML="عدد الطلبات: "+d.length;
+
+render();
 
 })
+
 .catch(()=>{
 
-document.getElementById("status").innerHTML="فشل الاتصال";
+document.getElementById("status").innerHTML="فشل الاتصال بالBackend";
 
 });
 
 }
 
 
+// render
 
-function render(list){
+function render(){
+
+let s=document.getElementById("search").value.toLowerCase();
 
 let html="";
 
-list.forEach(o=>{
+DATA.filter(o=>
+
+(o.name||"").toLowerCase().includes(s)||
+(o.phone||"").toLowerCase().includes(s)||
+(o.city||"").toLowerCase().includes(s)
+
+).forEach(o=>{
 
 html+=`
+
 <tr>
 
 <td>${o.name||""}</td>
-
 <td>${o.phone||""}</td>
-
 <td>${o.city||""}</td>
-
 <td>${o.type||""}</td>
-
 <td>${o.date||""}</td>
 
 <td>
-<button class="delete" onclick="del('${o.id}')">
+
+<button class="delete"
+onclick="del('${o.id}')">
+
 حذف
+
 </button>
+
 </td>
 
 </tr>
+
 `;
 
 });
@@ -252,40 +293,50 @@ document.getElementById("orders").innerHTML=html;
 }
 
 
-
-function search(){
-
-let s=document.getElementById("search").value.toLowerCase();
-
-let f=DATA.filter(o=>
-
-(o.name||"").toLowerCase().includes(s)
-||
-(o.phone||"").includes(s)
-||
-(o.city||"").toLowerCase().includes(s)
-
-);
-
-render(f);
-
-}
-
-
+// delete
 
 function del(id){
 
-if(!confirm("حذف الطلب؟"))return;
+if(!confirm("حذف الطلب؟")) return;
 
-fetch(API+"/"+id,{
-method:"DELETE"
-})
+fetch(API+"/"+id,{method:"DELETE"})
 .then(()=>load());
 
 }
 
-</script>
 
+// export CSV
+
+function exportCSV(){
+
+let csv="name,phone,city,type,date\n";
+
+DATA.forEach(o=>{
+
+csv+=`${o.name},${o.phone},${o.city},${o.type},${o.date}\n`;
+
+});
+
+let blob=new Blob([csv]);
+let a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+a.download="orders.csv";
+
+a.click();
+
+}
+
+
+// auto login
+
+if(localStorage.getItem("admin")){
+
+showAdmin();
+
+}
+
+</script>
 
 </body>
 </html>
