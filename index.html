@@ -3,283 +3,211 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>منصة أشير - طلب خدمة</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>منصة أشير | نموذج الطلب</title>
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --text:#0f172a;
-      --brand:#ff7a00;
-      --brand2:#16a34a;
-      --line:#e5e7eb;
-      --shadow: 0 20px 60px rgba(0,0,0,.18);
-      --radius:18px;
+      --bg:#f6f8fc;--card:#fff;--text:#0f172a;--muted:#64748b;
+      --brand:#ff6b00;--brand2:#0b1a2e;--border:#e5e7eb;--ok:#16a34a;--bad:#ef4444;
+      --r:18px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:"Cairo", system-ui, -apple-system, Segoe UI, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(900px 400px at 10% 10%, rgba(255,122,0,.18), transparent 55%),
-        radial-gradient(900px 400px at 90% 30%, rgba(22,163,74,.14), transparent 55%),
-        linear-gradient(180deg, #071021, #0b1220 60%, #f6f7fb 60%, #f6f7fb);
-      min-height:100vh;
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .top{
+      background:linear-gradient(135deg,#0b1a2e 0%,#122a4a 60%,#0b1a2e 100%);
+      color:#fff;border-radius:var(--r);padding:18px 18px;
+      display:flex;gap:14px;align-items:center;justify-content:space-between;
+      box-shadow:0 10px 28px rgba(2,6,23,.18);
     }
-    header{
-      background: linear-gradient(135deg, #071021, #0b1630);
-      color:#fff;
-      padding:20px 16px 26px;
-      position:sticky; top:0; z-index:10;
-      box-shadow: 0 10px 40px rgba(0,0,0,.25);
-    }
-    .wrap{max-width:980px;margin:0 auto;padding:0 12px;}
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
+    .brand{display:flex;gap:12px;align-items:center}
     .logo{
-      width:44px;height:44px;border-radius:14px;
-      background: linear-gradient(135deg, var(--brand), #ffb000);
-      display:grid; place-items:center;
-      font-weight:900;
-      box-shadow: 0 10px 25px rgba(255,122,0,.35);
+      width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.12);
+      display:grid;place-items:center;font-weight:800;font-size:18px;border:1px solid rgba(255,255,255,.15);
     }
-    .brand h1{margin:0;font-size:18px;font-weight:800;letter-spacing:.2px}
-    .brand p{margin:0;color:rgba(255,255,255,.75);font-size:12px}
-    .navbtn{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color:#fff;
-      padding:10px 14px;border-radius:14px;
-      font-weight:800;
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-flex;gap:10px;align-items:center;
-    }
-    main{padding:18px 0 60px;}
-    .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.7);
-    }
-    .cardhead{
-      padding:18px 18px 12px;
-      border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff, #fff7ef);
-    }
-    .cardhead h2{margin:0;font-size:20px;font-weight:900}
-    .cardhead p{margin:6px 0 0;color:var(--muted);font-size:13px}
-    form{padding:18px;display:grid;gap:14px}
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    label{font-size:13px;color:#111827;font-weight:800}
-    input, select, textarea{
-      width:100%;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      outline:none;
-      font-family:inherit;
-      font-size:14px;
-      background:#fff;
-      transition:.2s;
-    }
-    textarea{min-height:110px;resize:vertical}
-    input:focus, select:focus, textarea:focus{border-color: rgba(255,122,0,.6); box-shadow: 0 0 0 4px rgba(255,122,0,.12)}
-    .actions{
-      display:flex; gap:12px; align-items:center; justify-content:flex-start; flex-wrap:wrap;
-      padding-top:4px;
-    }
+    .brand h1{margin:0;font-size:18px}
+    .brand p{margin:2px 0 0;font-size:12px;opacity:.8}
     .btn{
-      border:0; cursor:pointer; font-weight:900; border-radius:16px;
-      padding:12px 16px; font-family:inherit;
-      display:inline-flex; align-items:center; gap:10px;
+      border:0;border-radius:14px;padding:10px 14px;font-weight:700;cursor:pointer;
+      background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)
     }
-    .btn.primary{background:var(--brand);color:#fff; box-shadow: 0 12px 30px rgba(255,122,0,.25)}
-    .btn.green{background:var(--brand2);color:#fff; box-shadow: 0 12px 30px rgba(22,163,74,.25)}
-    .btn.ghost{background:#fff;border:1px solid var(--line);color:#111827}
-    .status{
-      margin-top:6px;
-      font-size:13px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px dashed var(--line);
-      color:#111827;
-      background:#fafafa;
+    .btn:hover{filter:brightness(1.06)}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+      padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.06)
     }
-    .status.ok{border-color: rgba(22,163,74,.35); background: rgba(22,163,74,.08)}
-    .status.err{border-color: rgba(220,38,38,.35); background: rgba(220,38,38,.08); color:#7f1d1d}
-    .footnote{
-      margin-top:10px;
-      color:#6b7280;font-size:12px;
-      display:flex;justify-content:center;gap:6px;flex-wrap:wrap;
+    .card h2{margin:0 0 8px;font-size:18px}
+    .muted{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.7}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:520px){.row{grid-template-columns:1fr}}
+    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+    input,select,textarea{
+      width:100%;padding:12px 12px;border-radius:14px;border:1px solid var(--border);
+      outline:none;background:#fff;font-size:14px
     }
-    code{background:#111827; color:#fff; padding:3px 8px;border-radius:10px;font-size:12px}
-    @media (max-width:740px){ .grid{grid-template-columns:1fr} }
+    input:focus,select:focus,textarea:focus{border-color:#c7d2fe;box-shadow:0 0 0 4px rgba(99,102,241,.08)}
+    textarea{min-height:110px;resize:vertical}
+    .action{
+      display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap
+    }
+    .primary{
+      background:var(--brand);color:#fff;border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer
+    }
+    .primary:disabled{opacity:.6;cursor:not-allowed}
+    .pill{
+      padding:8px 10px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);
+      font-size:12px;color:var(--muted)
+    }
+    .msg{margin-top:10px;font-size:13px}
+    .ok{color:var(--ok);font-weight:700}
+    .bad{color:var(--bad);font-weight:700}
+    .mini{display:flex;gap:8px;flex-wrap:wrap}
+    .mini a{
+      text-decoration:none;color:var(--brand2);font-weight:800;background:#eef2ff;border:1px solid #e0e7ff;
+      padding:10px 12px;border-radius:14px;display:inline-block
+    }
   </style>
 </head>
 <body>
-<header>
   <div class="wrap">
-    <div class="topbar">
+    <div class="top">
       <div class="brand">
         <div class="logo">A</div>
         <div>
           <h1>منصة أشير</h1>
-          <p>إرسال طلب مباشر للوحة التحكم</p>
+          <p>نموذج طلب احترافي — يتم حفظ الطلب مباشرة في النظام</p>
         </div>
       </div>
-      <a class="navbtn" href="./admin.html">لوحة التحكم</a>
+      <button class="btn" onclick="goAdmin()">لوحة التحكم</button>
     </div>
-  </div>
-</header>
 
-<main>
-  <div class="wrap">
-    <div class="card">
-      <div class="cardhead">
-        <h2>نموذج الطلب</h2>
-        <p>املأ البيانات ثم اضغط إرسال. سيتم حفظ الطلب مباشرة في الـ Backend.</p>
-      </div>
+    <div class="grid">
+      <div class="card">
+        <h2>إرسال طلب</h2>
+        <p class="muted">املأ البيانات بدقة ثم اضغط إرسال. يمكنك اختيار نوع الطلب وإضافة تفاصيل.</p>
 
-      <form id="orderForm">
-        <div class="grid">
+        <div class="row">
           <div>
             <label>الاسم</label>
-            <input name="name" placeholder="مثال: أحمد" required />
+            <input id="name" placeholder="مثال: أحمد" />
           </div>
           <div>
             <label>الهاتف</label>
-            <input name="phone" placeholder="مثال: 0666xxxxxx" required />
+            <input id="phone" inputmode="tel" placeholder="مثال: 0666xxxxxx" />
           </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
           <div>
             <label>المدينة</label>
-            <input name="city" placeholder="مثال: غرداية" required />
+            <input id="city" placeholder="مثال: غرداية" />
           </div>
           <div>
             <label>نوع الطلب</label>
-            <select name="type" required>
-              <option value="طلب خدمة" selected>طلب خدمة</option>
-              <option value="استفسار">استفسار</option>
+            <select id="type">
+              <option value="طلب خدمة">طلب خدمة</option>
               <option value="طلب عرض سعر">طلب عرض سعر</option>
-              <option value="شكوى">شكوى</option>
+              <option value="استفسار">استفسار</option>
+              <option value="طلب آخر">طلب آخر</option>
             </select>
           </div>
         </div>
 
-        <div>
+        <div style="margin-top:10px">
           <label>ملاحظة</label>
-          <textarea name="note" placeholder="اكتب تفاصيل الطلب..."></textarea>
+          <textarea id="note" placeholder="اكتب تفاصيل الطلب..."></textarea>
         </div>
 
-        <div class="actions">
-          <button class="btn primary" type="submit">إرسال الطلب</button>
-          <button class="btn ghost" type="button" id="demoBtn">إضافة بيانات تجريبية</button>
-          <button class="btn green" type="button" id="pingBtn">اختبار Backend</button>
+        <div class="action">
+          <button class="primary" id="sendBtn" onclick="sendOrder()">إرسال الطلب</button>
+          <span class="pill" id="apiPill">Backend: —</span>
         </div>
 
-        <div id="status" class="status">جاهز للإرسال…</div>
-        <div class="footnote">
-          Backend:
-          <code id="backendText"></code>
+        <div class="msg" id="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>معلومات</h2>
+        <p class="muted">هذه النسخة تعمل مع Backend على Render. إذا غيرت رابط Render، عدّل المتغير <b>BACKEND</b> في الأسفل.</p>
+        <div class="mini">
+          <a href="./admin.html">فتح لوحة التحكم</a>
+          <a href="#" onclick="testHealth();return false;">اختبار الاتصال</a>
         </div>
-      </form>
+        <p class="muted" style="margin-top:12px">
+          ملاحظة: قد يتأخر Render المجاني أول مرة (Sleep) ثم يعمل.
+        </p>
+      </div>
     </div>
   </div>
-</main>
 
 <script>
-  // ✅ ضع رابط الـ backend هنا
-  const BACKEND_URL = "https://achir-backend-1.onrender.com";
+  // ✅ عدّل هذا فقط إذا تغير رابط Render
+  const BACKEND = "https://achir-backend.onrender.com";
+  const API_ORDERS = BACKEND + "/api/orders";
+  const API_HEALTH = BACKEND + "/api/health";
 
-  // ✅ مسارات API (سنستخدم /api)
-  const API = {
-    ping: `${BACKEND_URL}/api/health`,
-    createOrder: `${BACKEND_URL}/api/orders`
-  };
+  document.getElementById("apiPill").textContent = "Backend: " + BACKEND;
 
-  const statusEl = document.getElementById("status");
-  const backendText = document.getElementById("backendText");
-  backendText.textContent = BACKEND_URL;
-
-  function setStatus(msg, type=""){
-    statusEl.className = "status" + (type ? " " + type : "");
-    statusEl.innerHTML = msg;
+  function goAdmin(){
+    window.location.href = "./admin.html";
   }
 
-  document.getElementById("demoBtn").addEventListener("click", () => {
-    const f = document.getElementById("orderForm");
-    f.name.value = "أحمد";
-    f.phone.value = "0666376417";
-    f.city.value = "غرداية";
-    f.type.value = "طلب خدمة";
-    f.note.value = "هذه تجربة إرسال طلب من منصة أشير.";
-    setStatus("تمت إضافة بيانات تجريبية ✅");
-  });
+  function setMsg(text, ok=true){
+    const el = document.getElementById("msg");
+    el.innerHTML = ok ? `<span class="ok">✅ ${text}</span>` : `<span class="bad">❌ ${text}</span>`;
+  }
 
-  document.getElementById("pingBtn").addEventListener("click", async () => {
+  async function testHealth(){
     try{
-      setStatus("جاري اختبار الـ Backend ... ⏳");
-      const r = await fetch(API.ping);
-      const j = await r.json();
-      setStatus(`نجح الاتصال ✅: ${j.message || "OK"}`, "ok");
+      const r = await fetch(API_HEALTH);
+      const d = await r.json();
+      setMsg("الاتصال ممتاز — " + (d.status || "OK"), true);
     }catch(e){
-      setStatus(`فشل الاتصال ❌ تأكد من رابط الـ Backend و CORS. <br>${e}`, "err");
+      setMsg("فشل الاتصال بالـ Backend", false);
     }
-  });
+  }
 
-  document.getElementById("orderForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const f = e.target;
+  async function sendOrder(){
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const type = document.getElementById("type").value;
+    const note = document.getElementById("note").value.trim();
 
-    const payload = {
-      name: f.name.value.trim(),
-      phone: f.phone.value.trim(),
-      city: f.city.value.trim(),
-      type: f.type.value,
-      note: f.note.value.trim()
-    };
-
-    if(!payload.name || !payload.phone || !payload.city){
-      setStatus("املأ الاسم/الهاتف/المدينة ❌", "err");
+    if(!name || !phone || !city){
+      setMsg("املأ الاسم والهاتف والمدينة.", false);
       return;
     }
 
+    const btn = document.getElementById("sendBtn");
+    btn.disabled = true;
+    btn.textContent = "جاري الإرسال...";
+
     try{
-      setStatus("جاري إرسال الطلب... ⏳");
-      const r = await fetch(API.createOrder, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(payload)
+      const res = await fetch(API_ORDERS, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ name, phone, city, type, note })
       });
 
-      const text = await r.text();
-      let data;
-      try{ data = JSON.parse(text); }catch{ data = {raw:text}; }
-
-      if(!r.ok){
-        setStatus(`فشل الإرسال ❌ <br>HTTP ${r.status} <br>${data.message || data.raw || ""}`, "err");
-        return;
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok){
+        setMsg(data?.error || "حدث خطأ أثناء الإرسال", false);
+      }else{
+        setMsg("تم إرسال الطلب بنجاح ✅", true);
+        document.getElementById("note").value="";
       }
-
-      setStatus("تم إرسال الطلب بنجاح ✅ سيتم ظهوره في لوحة التحكم.", "ok");
-      f.reset();
-    }catch(err){
-      setStatus(`خطأ اتصال ❌ <br>${err}`, "err");
+    }catch(e){
+      setMsg("فشل الاتصال بالـ Backend", false);
+    }finally{
+      btn.disabled = false;
+      btn.textContent = "إرسال الطلب";
     }
-  });
+  }
+
+  // اختياري
+  testHealth();
 </script>
 </body>
 </html>
