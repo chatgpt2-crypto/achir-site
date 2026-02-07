@@ -3,459 +3,265 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>لوحة التحكم - منصة أشير</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>لوحة تحكم منصة أشير</title>
   <style>
     :root{
-      --bg:#071021;
-      --panel:#ffffff;
-      --line:#e5e7eb;
-      --muted:#6b7280;
-      --brand:#ff7a00;
-      --green:#16a34a;
-      --red:#dc2626;
-      --shadow: 0 20px 60px rgba(0,0,0,.18);
-      --radius:18px;
+      --bg:#f6f8fc;--card:#fff;--text:#0f172a;--muted:#64748b;
+      --brand:#ff6b00;--brand2:#0b1a2e;--border:#e5e7eb;--ok:#16a34a;--bad:#ef4444;
+      --r:18px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:"Cairo", system-ui, -apple-system, Segoe UI, Arial;
-      background:
-        radial-gradient(900px 450px at 10% 0%, rgba(255,122,0,.18), transparent 55%),
-        radial-gradient(900px 450px at 90% 30%, rgba(22,163,74,.14), transparent 55%),
-        linear-gradient(180deg, #071021, #071021 38%, #f6f7fb 38%, #f6f7fb);
-      min-height:100vh;
-      color:#0f172a;
-    }
-    header{
-      background: linear-gradient(135deg, #071021, #0b1630);
-      color:#fff;
-      padding:18px 16px 22px;
-      position:sticky;top:0;z-index:10;
-      box-shadow: 0 10px 40px rgba(0,0,0,.25);
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:0 12px;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
     .top{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;
+      box-shadow:0 10px 28px rgba(2,6,23,.06);
+      display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
     }
-    .title{
-      display:flex;align-items:center;gap:12px;
-    }
-    .avatar{
-      width:44px;height:44px;border-radius:14px;
-      background: linear-gradient(135deg, var(--brand), #ffb000);
-      display:grid;place-items:center;font-weight:900;
-      box-shadow: 0 10px 25px rgba(255,122,0,.35);
-    }
-    .title h1{margin:0;font-size:18px;font-weight:900}
-    .title p{margin:0;color:rgba(255,255,255,.75);font-size:12px}
-    .nav{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-    }
+    .title h1{margin:0;font-size:20px}
+    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
     .btn{
-      border:0;cursor:pointer;font-family:inherit;font-weight:900;
-      padding:10px 14px;border-radius:14px;
-      display:inline-flex;align-items:center;gap:10px;
-      text-decoration:none;
+      border:0;border-radius:14px;padding:10px 14px;font-weight:800;cursor:pointer
     }
-    .btn.primary{background:var(--brand);color:#fff; box-shadow: 0 12px 30px rgba(255,122,0,.25)}
-    .btn.green{background:var(--green);color:#fff; box-shadow: 0 12px 30px rgba(22,163,74,.25)}
-    .btn.ghost{background: rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
-    main{padding:16px 0 60px;}
-    .panel{
-      background:var(--panel);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,.7);
-      overflow:hidden;
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.dark{background:var(--brand2);color:#fff}
+    .btn.gray{background:#eef2ff;color:#0b1a2e;border:1px solid #e0e7ff}
+    .card{
+      margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+      padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.06)
     }
-    .head{
-      padding:16px 18px;
-      border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff, #fff7ef);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    .head h2{margin:0;font-size:18px;font-weight:900}
-    .head small{color:var(--muted)}
-    .tools{
-      padding:14px 18px;
-      border-bottom:1px solid var(--line);
-      display:grid;
-      grid-template-columns: 1.5fr .8fr .8fr;
-      gap:10px;
-      align-items:center;
-    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
     input{
-      width:100%;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      outline:none;
-      font-family:inherit;
-      background:#fff;
-      transition:.2s;
+      padding:12px;border-radius:14px;border:1px solid var(--border);min-width:240px;outline:none
     }
-    input:focus{border-color: rgba(255,122,0,.6); box-shadow: 0 0 0 4px rgba(255,122,0,.12)}
-    .pill{
-      border:1px dashed var(--line);
-      border-radius:14px;
-      padding:10px 12px;
-      text-align:center;
-      font-weight:900;
-      color:#111827;
-      background:#fafafa;
-    }
-    .status{
-      margin:12px 18px 0;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px dashed var(--line);
-      background:#fafafa;
-      font-size:13px;
-    }
-    .status.ok{border-color: rgba(22,163,74,.35); background: rgba(22,163,74,.08)}
-    .status.err{border-color: rgba(220,38,38,.35); background: rgba(220,38,38,.08); color:#7f1d1d}
-    table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-    }
-    thead th{
-      background:#0b1630;
-      color:#fff;
-      padding:12px 10px;
-      font-size:13px;
-      text-align:right;
-      position:sticky; top:0;
-    }
-    tbody td{
-      border-bottom:1px solid var(--line);
-      padding:12px 10px;
-      font-size:13px;
-      vertical-align:top;
-      background:#fff;
-    }
-    tbody tr:hover td{background:#fffaf4}
-    .actions{
-      display:flex;gap:8px;flex-wrap:wrap;
-    }
-    .iconbtn{
-      border:1px solid var(--line);
-      background:#fff;
-      padding:8px 10px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:900;
-      font-family:inherit;
-    }
-    .iconbtn.danger{border-color: rgba(220,38,38,.25); color:#b91c1c; background: rgba(220,38,38,.06)}
-    .iconbtn.save{border-color: rgba(22,163,74,.25); color:#166534; background: rgba(22,163,74,.06)}
-    .muted{color:var(--muted); font-size:12px}
-    .footer{
-      padding:12px 18px;
-      color:var(--muted);
-      font-size:12px;
-      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    code{background:#111827;color:#fff;padding:3px 8px;border-radius:10px}
-    @media (max-width:860px){
-      .tools{grid-template-columns:1fr}
-      thead{display:none}
-      table,tbody,tr,td{display:block;width:100%}
-      tbody td{border-bottom:0}
-      tbody tr{border-bottom:1px solid var(--line)}
-      tbody td::before{
-        content:attr(data-label);
-        display:block;
-        font-weight:900;
-        margin-bottom:6px;
-        color:#111827;
-      }
-    }
+    input:focus{border-color:#c7d2fe;box-shadow:0 0 0 4px rgba(99,102,241,.08)}
+    .pill{padding:8px 10px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);font-size:12px;color:var(--muted)}
+    .msg{margin-top:10px;font-size:13px}
+    .ok{color:var(--ok);font-weight:800}
+    .bad{color:var(--bad);font-weight:800}
+    table{width:100%;border-collapse:separate;border-spacing:0;margin-top:12px;overflow:hidden;border-radius:14px;border:1px solid var(--border)}
+    th,td{padding:12px;border-bottom:1px solid var(--border);text-align:center;font-size:13px}
+    th{background:var(--brand2);color:#fff;font-weight:900}
+    tr:last-child td{border-bottom:0}
+    .danger{background:#ef4444;color:#fff;border:0;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
+    .wa{background:#22c55e;color:#fff;border:0;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
+    .small{font-size:12px;color:var(--muted)}
+    .loginBox{display:grid;gap:10px;max-width:460px;margin:0 auto}
   </style>
 </head>
 <body>
-
-<header>
   <div class="wrap">
     <div class="top">
       <div class="title">
-        <div class="avatar">A</div>
-        <div>
-          <h1>لوحة تحكم منصة أشير</h1>
-          <p id="backendLine">Backend: ...</p>
-        </div>
+        <h1>لوحة تحكم منصة أشير</h1>
+        <p class="small" id="apiText">Backend: —</p>
       </div>
-
-      <div class="nav">
-        <a class="btn ghost" href="./index.html">صفحة الطلب</a>
-        <button class="btn green" id="refreshBtn">تحديث</button>
-        <button class="btn primary" id="exportBtn">تصدير Excel</button>
+      <div class="actions">
+        <button class="btn gray" onclick="goOrder()">صفحة الطلب</button>
+        <button class="btn primary" onclick="loadOrders()">تحديث</button>
+        <button class="btn dark" onclick="exportExcel()">تصدير Excel</button>
+        <button class="btn gray" onclick="logout()">خروج</button>
       </div>
     </div>
-  </div>
-</header>
 
-<main>
-  <div class="wrap">
-    <div class="panel">
-      <div class="head">
-        <div>
-          <h2>الطلبات</h2>
-          <small>بحث بالاسم/الهاتف/المدينة — التعديل والحذف مباشرة على الـ Backend</small>
-        </div>
-        <div class="muted" id="lastLoad">آخر تحميل: -</div>
+    <div class="card" id="loginCard">
+      <h3 style="margin:0 0 6px">تسجيل دخول</h3>
+      <p class="small">أدخل كلمة السر للوصول للطلبات (محمية).</p>
+      <div class="loginBox">
+        <input id="password" type="password" placeholder="كلمة السر" />
+        <button class="btn primary" onclick="login()">دخول</button>
+        <div class="msg" id="loginMsg"></div>
       </div>
+    </div>
 
-      <div class="tools">
-        <input id="search" placeholder="بحث..." />
+    <div class="card" id="dataCard" style="display:none">
+      <div class="row">
         <div class="pill" id="countPill">عدد الطلبات: 0</div>
-        <div class="pill" id="lastPill">آخر تحميل: -</div>
+        <input id="q" placeholder="بحث بالاسم/الهاتف/المدينة..." oninput="render()" />
       </div>
 
-      <div id="status" class="status">جاري التحميل…</div>
+      <div class="msg" id="msg"></div>
 
-      <div style="max-height:52vh; overflow:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>الاسم</th>
-              <th>الهاتف</th>
-              <th>المدينة</th>
-              <th>النوع</th>
-              <th>ملاحظة</th>
-              <th>التاريخ</th>
-              <th>إجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-
-      <div class="footer">
-        <div>Backend: <code id="backendCode"></code></div>
-        <div class="muted">ملاحظة: هذا Front-End. الحماية الحقيقية تكون عبر صلاحيات داخل الـ Backend.</div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>الهاتف</th>
+            <th>المدينة</th>
+            <th>نوع الطلب</th>
+            <th>ملاحظة</th>
+            <th>التاريخ</th>
+            <th>واتساب</th>
+            <th>حذف</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
     </div>
   </div>
-</main>
 
 <script>
-  // ✅ ضع رابط الـ backend هنا
-  const BACKEND_URL = "https://achir-backend-1.onrender.com";
+  // ✅ عدّل هذا فقط إذا تغير رابط Render
+  const BACKEND = "https://achir-backend.onrender.com";
+  const API_HEALTH = BACKEND + "/api/health";
+  const API_LOGIN  = BACKEND + "/api/login";
+  const API_ORDERS = BACKEND + "/api/orders";
+  const API_EXPORT = BACKEND + "/api/orders/export";
 
-  // ✅ مسارات API — مهم جداً (كان عندك خطأ 404 لأنك تستخدم /orders بدون /api)
-  const API = {
-    list:   `${BACKEND_URL}/api/orders`,
-    create: `${BACKEND_URL}/api/orders`,
-    update: (id) => `${BACKEND_URL}/api/orders/${id}`,
-    remove: (id) => `${BACKEND_URL}/api/orders/${id}`,
-    health: `${BACKEND_URL}/api/health`,
-  };
+  document.getElementById("apiText").textContent = "Backend: " + BACKEND;
 
-  const statusEl = document.getElementById("status");
-  const tbody = document.getElementById("tbody");
-  const searchEl = document.getElementById("search");
-  const countPill = document.getElementById("countPill");
-  const lastPill = document.getElementById("lastPill");
-  const backendCode = document.getElementById("backendCode");
-  const backendLine = document.getElementById("backendLine");
-  const lastLoad = document.getElementById("lastLoad");
+  let TOKEN = localStorage.getItem("ACHIR_TOKEN") || "";
+  let ORDERS = [];
 
-  backendCode.textContent = BACKEND_URL;
-  backendLine.textContent = `Backend: ${BACKEND_URL}`;
+  function goOrder(){ window.location.href = "./index.html"; }
 
-  let orders = [];
-
-  function nowStr(){
-    const d = new Date();
-    return d.toLocaleString("ar-DZ");
+  function setMsg(text, ok=true){
+    const el = document.getElementById("msg");
+    el.innerHTML = ok ? `<span class="ok">✅ ${text}</span>` : `<span class="bad">❌ ${text}</span>`;
   }
-  function setStatus(msg, type=""){
-    statusEl.className = "status" + (type ? " " + type : "");
-    statusEl.innerHTML = msg;
+  function setLoginMsg(text, ok=true){
+    const el = document.getElementById("loginMsg");
+    el.innerHTML = ok ? `<span class="ok">✅ ${text}</span>` : `<span class="bad">❌ ${text}</span>`;
   }
 
-  function safe(v){ return (v ?? "").toString(); }
+  function authHeaders(){
+    return { "Authorization": "Bearer " + TOKEN };
+  }
 
-  function render(list){
-    tbody.innerHTML = "";
+  async function login(){
+    const password = document.getElementById("password").value.trim();
+    if(!password){ setLoginMsg("أدخل كلمة السر", false); return; }
 
-    if(!Array.isArray(list) || list.length === 0){
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#6b7280; padding:18px;">لا توجد طلبات حالياً.</td></tr>`;
-      return;
-    }
+    try{
+      const r = await fetch(API_LOGIN,{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ password })
+      });
+      const d = await r.json().catch(()=> ({}));
+      if(!r.ok){ setLoginMsg(d?.error || "فشل الدخول", false); return; }
 
-    for(const o of list){
-      const tr = document.createElement("tr");
+      TOKEN = d.token;
+      localStorage.setItem("ACHIR_TOKEN", TOKEN);
+      setLoginMsg("تم تسجيل الدخول", true);
 
-      const created = o.created_at || o.createdAt || o.date || "";
-      tr.innerHTML = `
-        <td data-label="الاسم">
-          <input value="${escapeHtml(safe(o.name))}" data-field="name" data-id="${o.id}" />
-        </td>
-        <td data-label="الهاتف">
-          <input value="${escapeHtml(safe(o.phone))}" data-field="phone" data-id="${o.id}" />
-        </td>
-        <td data-label="المدينة">
-          <input value="${escapeHtml(safe(o.city))}" data-field="city" data-id="${o.id}" />
-        </td>
-        <td data-label="النوع">
-          <input value="${escapeHtml(safe(o.type))}" data-field="type" data-id="${o.id}" />
-        </td>
-        <td data-label="ملاحظة">
-          <input value="${escapeHtml(safe(o.note))}" data-field="note" data-id="${o.id}" />
-        </td>
-        <td data-label="التاريخ" class="muted">${escapeHtml(safe(created))}</td>
-        <td data-label="إجراءات">
-          <div class="actions">
-            <button class="iconbtn save" data-action="save" data-id="${o.id}">حفظ</button>
-            <button class="iconbtn danger" data-action="del" data-id="${o.id}">حذف</button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("dataCard").style.display="block";
+      await loadOrders();
+    }catch(e){
+      setLoginMsg("فشل الاتصال بالـ Backend", false);
     }
   }
 
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
-
-  function filterOrders(q){
-    q = q.trim().toLowerCase();
-    if(!q) return orders;
-    return orders.filter(o => {
-      const hay = `${safe(o.name)} ${safe(o.phone)} ${safe(o.city)} ${safe(o.type)} ${safe(o.note)}`.toLowerCase();
-      return hay.includes(q);
-    });
+  function logout(){
+    localStorage.removeItem("ACHIR_TOKEN");
+    TOKEN="";
+    location.reload();
   }
 
   async function loadOrders(){
     try{
-      setStatus("جاري التحميل… ⏳");
-      const r = await fetch(API.list);
-      const text = await r.text();
-      let data;
-      try{ data = JSON.parse(text); }catch{ data = text; }
-
+      const r = await fetch(API_ORDERS, { headers: authHeaders() });
+      const d = await r.json().catch(()=> ({}));
       if(!r.ok){
-        setStatus(`فشل التحميل ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
+        setMsg(d?.error || "لا يمكن تحميل الطلبات", false);
+        if(d?.error?.includes("token") || r.status===401){
+          document.getElementById("loginCard").style.display="block";
+          document.getElementById("dataCard").style.display="none";
+        }
         return;
       }
-
-      if(!Array.isArray(data)){
-        setStatus("فشل التحميل ❌ الـ Backend لم يرجع Array. تأكد من /api/orders", "err");
-        return;
-      }
-
-      orders = data;
-      const t = nowStr();
-      lastPill.textContent = `آخر تحميل: ${t}`;
-      lastLoad.textContent = `آخر تحميل: ${t}`;
-      countPill.textContent = `عدد الطلبات: ${orders.length}`;
-
-      render(filterOrders(searchEl.value));
-      setStatus("تم التحميل ✅", "ok");
+      ORDERS = Array.isArray(d) ? d : [];
+      document.getElementById("countPill").textContent = "عدد الطلبات: " + ORDERS.length;
+      setMsg("تم التحميل", true);
+      render();
     }catch(e){
-      setStatus(`خطأ اتصال ❌ <br>${e}`, "err");
+      setMsg("فشل الاتصال بالـ Backend", false);
     }
   }
 
-  async function saveOrder(id){
-    const rowInputs = [...document.querySelectorAll(`input[data-id="${id}"]`)];
-    const payload = {};
-    rowInputs.forEach(inp => payload[inp.dataset.field] = inp.value.trim());
+  function render(){
+    const q = (document.getElementById("q").value || "").toLowerCase().trim();
+    const list = q
+      ? ORDERS.filter(o => (
+          (o.name||"").toLowerCase().includes(q) ||
+          (o.phone||"").toLowerCase().includes(q) ||
+          (o.city||"").toLowerCase().includes(q) ||
+          (o.type||"").toLowerCase().includes(q) ||
+          (o.note||"").toLowerCase().includes(q)
+        ))
+      : ORDERS;
 
+    const tbody = document.getElementById("rows");
+    tbody.innerHTML = list.map(o => {
+      const date = o.created_at ? new Date(o.created_at).toLocaleString() : "";
+      const waText = encodeURIComponent(`مرحبا ${o.name||""}، بخصوص طلبك (${o.type||""}) في منصة أشير...`);
+      const wa = `https://wa.me/${(o.phone||"").replace(/^0/,'213') }?text=${waText}`;
+      return `
+        <tr>
+          <td>${escapeHtml(o.name||"")}</td>
+          <td>${escapeHtml(o.phone||"")}</td>
+          <td>${escapeHtml(o.city||"")}</td>
+          <td>${escapeHtml(o.type||"")}</td>
+          <td>${escapeHtml(o.note||"")}</td>
+          <td>${escapeHtml(date)}</td>
+          <td><button class="wa" onclick="openWa('${wa}')">واتساب</button></td>
+          <td><button class="danger" onclick="delOrder('${o.id}')">حذف</button></td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function openWa(url){ window.open(url, "_blank"); }
+
+  async function delOrder(id){
+    if(!confirm("تأكيد حذف الطلب؟")) return;
     try{
-      setStatus("جاري حفظ التعديل… ⏳");
-      const r = await fetch(API.update(id), {
-        method:"PUT",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-      const text = await r.text();
-      let data; try{ data = JSON.parse(text); }catch{ data = text; }
-
-      if(!r.ok){
-        setStatus(`فشل الحفظ ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
-        return;
-      }
-
-      setStatus("تم الحفظ ✅", "ok");
+      const r = await fetch(API_ORDERS + "/" + id, { method:"DELETE", headers: authHeaders() });
+      const d = await r.json().catch(()=> ({}));
+      if(!r.ok){ setMsg(d?.error || "فشل الحذف", false); return; }
+      setMsg("تم الحذف", true);
       await loadOrders();
     }catch(e){
-      setStatus(`خطأ اتصال أثناء الحفظ ❌ <br>${e}`, "err");
+      setMsg("فشل الاتصال", false);
     }
   }
 
-  async function deleteOrder(id){
-    if(!confirm("هل تريد حذف الطلب؟")) return;
-
+  async function exportExcel(){
     try{
-      setStatus("جاري الحذف… ⏳");
-      const r = await fetch(API.remove(id), { method:"DELETE" });
-      const text = await r.text();
-      let data; try{ data = JSON.parse(text); }catch{ data = text; }
-
+      const r = await fetch(API_EXPORT, { headers: authHeaders() });
       if(!r.ok){
-        setStatus(`فشل الحذف ❌ <br>HTTP ${r.status}<br>${safe(data.message || data)}`, "err");
+        const d = await r.json().catch(()=> ({}));
+        setMsg(d?.error || "فشل التصدير", false);
         return;
       }
-
-      setStatus("تم الحذف ✅", "ok");
-      await loadOrders();
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "orders.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
+      setMsg("تم تصدير Excel", true);
     }catch(e){
-      setStatus(`خطأ اتصال أثناء الحذف ❌ <br>${e}`, "err");
+      setMsg("فشل الاتصال", false);
     }
   }
 
-  function exportCSV(){
-    const list = filterOrders(searchEl.value);
-    const headers = ["id","name","phone","city","type","note","created_at"];
-    const rows = [headers.join(",")];
-
-    for(const o of list){
-      const row = headers.map(h => {
-        const v = safe(o[h] ?? o[h.replace("_at","At")] ?? "");
-        return `"${v.replace(/"/g,'""')}"`;
-      }).join(",");
-      rows.push(row);
-    }
-
-    const blob = new Blob(["\ufeff" + rows.join("\n")], {type:"text/csv;charset=utf-8"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "orders.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   }
 
-  document.getElementById("refreshBtn").addEventListener("click", loadOrders);
-  document.getElementById("exportBtn").addEventListener("click", exportCSV);
-
-  searchEl.addEventListener("input", () => {
-    const list = filterOrders(searchEl.value);
-    countPill.textContent = `عدد الطلبات: ${list.length} / ${orders.length}`;
-    render(list);
-  });
-
-  tbody.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-action]");
-    if(!btn) return;
-    const id = btn.dataset.id;
-    const act = btn.dataset.action;
-    if(act === "save") saveOrder(id);
-    if(act === "del") deleteOrder(id);
-  });
-
-  // تحميل أولي
-  loadOrders();
+  // Auto show if token موجود
+  (async ()=>{
+    try{ await fetch(API_HEALTH); }catch(e){}
+    if(TOKEN){
+      document.getElementById("loginCard").style.display="none";
+      document.getElementById("dataCard").style.display="block";
+      loadOrders();
+    }
+  })();
 </script>
 </body>
-  </html>
+</html>
