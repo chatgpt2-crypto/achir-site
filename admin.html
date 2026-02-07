@@ -2,545 +2,461 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>لوحة التحكم - الطلبات</title>
-
   <style>
     :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e5e7eb;
-      --accent:#f97316;
-      --accent2:#16a34a;
-      --danger:#ef4444;
-      --shadow: 0 10px 30px rgba(2,6,23,.08);
-      --radius: 18px;
+      --bg:#f6f7fb; --card:#fff; --text:#111827; --muted:#6b7280;
+      --brand:#ff7a00; --brand2:#ff9a3a; --line:#e5e7eb;
+      --good:#16a34a; --bad:#dc2626; --dark:#0f172a;
+      --shadow: 0 10px 25px rgba(15,23,42,.08);
+      --radius:18px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;
-      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
-      background:var(--bg);
-      color:var(--text);
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:var(--bg); color:var(--text);
     }
-    .wrap{
-      max-width:1100px;
-      margin:32px auto;
-      padding:0 14px;
+    .wrap{max-width:1100px; margin:28px auto; padding:0 14px;}
+    .top{
+      background:linear-gradient(135deg, #ffffff, #ffffff);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding:18px 18px 14px;
+    }
+    .title{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      flex-wrap:wrap;
+    }
+    h1{margin:0; font-size:26px}
+    .sub{color:var(--muted); margin-top:6px; font-size:14px}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 12px; background:#fff; border:1px solid var(--line);
+      border-radius:999px; color:var(--muted); font-size:13px;
+    }
+    .controls{
+      margin-top:14px; display:grid; gap:10px;
+      grid-template-columns: 160px 1fr 170px;
+    }
+    @media (max-width: 760px){
+      .controls{grid-template-columns:1fr}
+    }
+    button{
+      border:0; cursor:pointer; border-radius:14px;
+      padding:12px 14px; font-weight:700; font-size:15px;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg, var(--brand), var(--brand2));
+      color:#fff; box-shadow: 0 10px 18px rgba(255,122,0,.18);
+    }
+    .btn-dark{
+      background:var(--dark); color:#fff;
+      box-shadow: 0 10px 18px rgba(2,6,23,.18);
+    }
+    .btn-ghost{
+      background:#fff; border:1px solid var(--line); color:var(--text);
+    }
+    input, select{
+      width:100%; border:1px solid var(--line); border-radius:14px;
+      padding:12px 14px; font-size:15px; outline:none; background:#fff;
+    }
+    input:focus, select:focus{border-color:#cbd5e1; box-shadow:0 0 0 4px rgba(59,130,246,.08)}
+    .meta{
+      margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      color:var(--muted); font-size:14px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px; background:#fff;
+      border:1px solid var(--line);
+    }
+    .badge strong{color:var(--text)}
+    .ok{color:var(--good); font-weight:800}
+    .err{color:var(--bad); font-weight:800}
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
     }
     .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
     }
-    header{
-      padding:22px 18px 10px;
-      text-align:center;
-    }
-    h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin:10px 0 0;
-      color:var(--muted);
-      font-size:14px;
-      word-break:break-all;
-    }
-
-    .toolbar{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-      padding:14px 14px 18px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      border:none;
-      border-radius:12px;
-      padding:11px 14px;
-      font-weight:700;
-      cursor:pointer;
-      background:var(--accent);
-      color:#fff;
-      box-shadow: 0 6px 16px rgba(249,115,22,.25);
-      transition:.15s;
-      min-width:110px;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn:active{transform:translateY(0)}
-    .btn.secondary{
-      background:#0f172a;
-      box-shadow:none;
-    }
-    .btn.danger{
-      background:var(--danger);
-      box-shadow:none;
-    }
-    .input{
-      width:min(520px, 100%);
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:12px 14px;
-      outline:none;
-      font-size:14px;
-      background:#fff;
+    .row{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .id{
+      font-weight:900; color:var(--muted);
+      background:#f3f4f6; border:1px dashed #e5e7eb;
+      padding:6px 10px; border-radius:999px;
     }
     .status{
-      text-align:center;
-      color:var(--accent2);
-      font-weight:700;
-      padding:0 16px 14px;
-      min-height:22px;
+      padding:6px 10px; border-radius:999px; font-weight:800; font-size:13px;
+      border:1px solid var(--line); background:#fff;
     }
-    .status.err{color:var(--danger)}
-    .status.muted{color:var(--muted); font-weight:600}
-
-    .tableWrap{padding:0 12px 14px}
-    table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
+    .s-new{color:#0ea5e9}
+    .s-work{color:#f59e0b}
+    .s-done{color:#16a34a}
+    .k{color:var(--muted); font-size:13px; margin-top:10px}
+    .v{font-size:18px; font-weight:900; margin-top:4px; word-break:break-word}
+    .two{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;
     }
-    thead th{
-      background:#f8fafc;
-      color:#0f172a;
-      padding:12px 10px;
-      font-size:13px;
-      border-bottom:1px solid var(--line);
-      text-align:right;
-      white-space:nowrap;
-    }
-    tbody td{
-      padding:12px 10px;
-      border-bottom:1px solid var(--line);
-      vertical-align:top;
-      font-size:14px;
-      color:#111827;
-    }
-    tbody tr:last-child td{border-bottom:none}
-    .muted{color:var(--muted); font-size:13px}
+    @media (max-width: 520px){ .two{grid-template-columns:1fr} }
     .actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+      margin-top:12px;
+      display:flex; gap:10px; flex-wrap:wrap;
     }
-    .tag{
-      display:inline-block;
-      padding:4px 9px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      font-size:12px;
-      color:var(--muted);
-      background:#fff;
+    .btn-wa{
+      background:#25D366; color:#fff; font-weight:900;
+      box-shadow: 0 10px 18px rgba(37,211,102,.18);
     }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      justify-content:center;
-      padding:10px 12px;
-      border:1px dashed var(--line);
-      border-radius:12px;
-      background:#fff;
-      color:var(--muted);
-      margin:0 auto 14px;
-      width:fit-content;
-      font-size:13px;
-    }
-
-    /* Modal */
-    .modalBack{
-      position:fixed;
-      inset:0;
-      background:rgba(2,6,23,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:50;
-    }
-    .modal{
-      width:min(520px, 100%);
-      background:#fff;
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      border:1px solid var(--line);
-    }
-    .modalHead{
-      padding:14px 16px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .modalTitle{font-weight:900}
-    .close{
-      border:none;
-      background:#f1f5f9;
-      border-radius:10px;
-      padding:8px 10px;
-      cursor:pointer;
+    .btn-del{
+      background:#fff; border:1px solid #fecaca; color:#b91c1c;
       font-weight:900;
     }
-    .modalBody{padding:14px 16px; display:grid; gap:10px}
-    .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
-    .field input, .field textarea{
-      width:100%;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:11px 12px;
-      outline:none;
-      font-size:14px;
+    .hint{margin-top:12px; color:var(--muted); font-size:13px; line-height:1.6}
+    .footer{
+      margin-top:16px; text-align:center; color:var(--muted); font-size:12px;
     }
-    .field textarea{min-height:90px; resize:vertical}
-    .modalFoot{
-      padding:14px 16px;
-      border-top:1px solid var(--line);
-      display:flex;
-      gap:10px;
-      justify-content:flex-start;
-      flex-wrap:wrap;
-    }
-
-    @media (max-width:640px){
-      h1{font-size:22px}
-      thead{display:none}
-      table, tbody, tr, td{display:block; width:100%}
-      tbody tr{
-        border-bottom:1px solid var(--line);
-        padding:10px 8px;
-      }
-      tbody td{
-        border:none;
-        padding:6px 4px;
-      }
-      tbody td::before{
-        content: attr(data-label);
-        display:block;
-        color:var(--muted);
-        font-size:12px;
-        margin-bottom:3px;
-      }
-      .actions{justify-content:flex-start}
-    }
+    .small{font-size:12px; color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+    .divider{height:1px; background:var(--line); margin:14px 0}
   </style>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="card">
-      <header>
-        <h1>لوحة التحكم - الطلبات</h1>
-        <div class="sub" id="backendLine"></div>
-      </header>
-
-      <div class="toolbar">
-        <button class="btn" id="refreshBtn">تحديث</button>
-        <input class="input" id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
-        <button class="btn secondary" id="openApiBtn">فتح API</button>
+    <div class="top">
+      <div class="title">
+        <div>
+          <h1>لوحة التحكم - الطلبات</h1>
+          <div class="sub">
+            Backend:
+            <span class="mono" id="backendLabel">—</span>
+          </div>
+        </div>
+        <div class="pill">
+          ⏱️ تحديث تلقائي كل <strong>7 ث</strong>
+        </div>
       </div>
 
-      <div class="status muted" id="status"></div>
+      <div class="controls">
+        <button class="btn-primary" id="refreshBtn">تحديث</button>
+        <input id="search" placeholder="بحث بالاسم / الهاتف / المدينة / الملاحظة..." />
+        <select id="filterStatus">
+          <option value="all">كل الحالات</option>
+          <option value="new">جديد</option>
+          <option value="working">قيد المعالجة</option>
+          <option value="done">مكتمل</option>
+        </select>
+      </div>
 
-      <div class="tableWrap">
-        <div class="pill">
-          <span class="tag" id="countTag">0 طلب</span>
-          <span class="tag" id="timeTag">—</span>
-        </div>
+      <div class="meta">
+        <span class="badge">📦 تم جلب: <strong id="count">0</strong> طلب</span>
+        <span class="badge">🕒 آخر تحديث: <strong id="last">—</strong></span>
+        <span class="badge">📡 الحالة: <strong id="state" class="ok">جاهز</strong></span>
+      </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th style="width:70px">#</th>
-              <th>الاسم</th>
-              <th>الهاتف</th>
-              <th>المدينة</th>
-              <th>ملاحظة</th>
-              <th style="width:180px">التاريخ</th>
-              <th style="width:200px">إجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="rows">
-            <tr>
-              <td colspan="7" class="muted" style="text-align:center;padding:18px">
-                لا توجد بيانات بعد...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="hint">
+        ✅ اضغط <b>تحديث</b> لجلب الطلبات.  
+        ✅ زر <b>فتح واتساب</b> يفتح محادثة مع رقم الزبون.  
+        ✅ يمكنك تغيير حالة الطلب (جديد / قيد المعالجة / مكتمل).  
+        ✅ زر <b>حذف</b> يحذف الطلب من قاعدة البيانات.
       </div>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div class="modalBack" id="modalBack">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="modalHead">
-        <div class="modalTitle">تعديل الطلب</div>
-        <button class="close" id="closeModal">×</button>
-      </div>
+    <div class="grid" id="list"></div>
 
-      <div class="modalBody">
-        <div class="field">
-          <label>الاسم</label>
-          <input id="m_name" />
-        </div>
-        <div class="field">
-          <label>الهاتف</label>
-          <input id="m_phone" />
-        </div>
-        <div class="field">
-          <label>المدينة</label>
-          <input id="m_city" />
-        </div>
-        <div class="field">
-          <label>ملاحظة</label>
-          <textarea id="m_note"></textarea>
-        </div>
-        <div class="muted" id="m_meta"></div>
-      </div>
-
-      <div class="modalFoot">
-        <button class="btn" id="saveBtn">حفظ</button>
-        <button class="btn danger" id="deleteBtn">حذف</button>
-        <button class="btn secondary" id="cancelBtn">إلغاء</button>
-      </div>
+    <div class="footer">
+      لوحة تحكم أشير — تصميم خفيف ومتجاوب للجوال والويب
     </div>
   </div>
 
   <script>
-    // ✅ ضع رابط الـ backend هنا فقط
-    // ملاحظة: نحن نستعمل endpoint الصحيح مباشرة: /api/orders
-    const API_BASE = "https://achir-backend.onrender.com";
-    const API_ORDERS = API_BASE + "/api/orders";
+    // ✅ ضع رابط الـ Backend هنا (نفس الذي عندك على Render)
+    const BACKEND = "https://achir-backend.onrender.com";
+    document.getElementById("backendLabel").textContent = BACKEND;
 
-    const backendLine = document.getElementById("backendLine");
-    backendLine.textContent = "Backend: " + API_BASE;
+    // ✅ مسارات API (عدّلها لو كانت مختلفة)
+    const API_LIST   = `${BACKEND}/api/orders`;
+    const API_DELETE = (id) => `${BACKEND}/api/orders/${id}`;
+    const API_STATUS = (id) => `${BACKEND}/api/orders/${id}/status`; // سنستعملها إن كانت موجودة
 
-    const rowsEl = document.getElementById("rows");
-    const statusEl = document.getElementById("status");
-    const searchEl = document.getElementById("search");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const openApiBtn = document.getElementById("openApiBtn");
+    const elList  = document.getElementById("list");
+    const elCount = document.getElementById("count");
+    const elLast  = document.getElementById("last");
+    const elState = document.getElementById("state");
 
-    const countTag = document.getElementById("countTag");
-    const timeTag = document.getElementById("timeTag");
-
-    const modalBack = document.getElementById("modalBack");
-    const closeModal = document.getElementById("closeModal");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const deleteBtn = document.getElementById("deleteBtn");
-
-    const m_name = document.getElementById("m_name");
-    const m_phone = document.getElementById("m_phone");
-    const m_city = document.getElementById("m_city");
-    const m_note = document.getElementById("m_note");
-    const m_meta = document.getElementById("m_meta");
+    const elSearch = document.getElementById("search");
+    const elFilter = document.getElementById("filterStatus");
+    const elRefresh = document.getElementById("refreshBtn");
 
     let allOrders = [];
-    let currentOrder = null;
+    let timer = null;
 
-    function setStatus(text, type="muted"){
-      statusEl.className = "status " + (type === "err" ? "err" : (type === "ok" ? "" : "muted"));
-      statusEl.textContent = text || "";
+    function setState(ok, msg){
+      elState.textContent = msg;
+      elState.className = ok ? "ok" : "err";
     }
 
-    function fmtDate(s){
+    function formatDate(s){
       if(!s) return "—";
-      // إذا التاريخ بصيغة SQL مثل 2026-02-07 12:18:12
-      // نحاول عرضه بشكل بسيط
-      return String(s).replace("T"," ").replace("Z","");
+      // دعم صيغ: "2026-02-07 13:21:02" أو ISO
+      const d = new Date(String(s).replace(" ", "T"));
+      if (isNaN(d.getTime())) return String(s);
+      return d.toLocaleString("ar-DZ");
     }
 
-    function safe(v){ return (v ?? "").toString(); }
+    function statusLabel(val){
+      if(val === "working") return {txt:"قيد المعالجة", cls:"s-work"};
+      if(val === "done") return {txt:"مكتمل", cls:"s-done"};
+      return {txt:"جديد", cls:"s-new"};
+    }
 
-    function filterOrders(q){
-      q = (q||"").trim().toLowerCase();
-      if(!q) return allOrders;
+    function normalizePhone(phone){
+      let p = (phone || "").toString().trim();
+      p = p.replace(/\s+/g,"");
+      // لو رقم يبدأ بـ 0 نحوله ل 213
+      if(p.startsWith("0")) p = "213" + p.slice(1);
+      // لو يبدأ بـ + نحذف +
+      if(p.startsWith("+")) p = p.slice(1);
+      return p;
+    }
+
+    function matches(order, q){
+      if(!q) return true;
+      q = q.toLowerCase();
+      const hay = [
+        order.id,
+        order.name,
+        order.phone,
+        order.city,
+        order.note,
+        order.created_at,
+        order.status
+      ].map(x => (x ?? "").toString().toLowerCase()).join(" ");
+      return hay.includes(q);
+    }
+
+    function filterOrders(){
+      const q = elSearch.value.trim();
+      const fs = elFilter.value;
+
       return allOrders.filter(o => {
-        const hay = [
-          safe(o.id),
-          safe(o.name),
-          safe(o.phone),
-          safe(o.city),
-          safe(o.note),
-          safe(o.created_at)
-        ].join(" ").toLowerCase();
-        return hay.includes(q);
+        const okSearch = matches(o, q);
+        const okStatus = (fs === "all") ? true : ((o.status || "new") === fs);
+        return okSearch && okStatus;
       });
     }
 
     function render(){
-      const q = searchEl.value;
-      const data = filterOrders(q);
+      const items = filterOrders();
+      elCount.textContent = items.length;
 
-      countTag.textContent = `${data.length} طلب`;
-      timeTag.textContent = `آخر تحديث: ${new Date().toLocaleString("ar-DZ")}`;
-
-      if(!data.length){
-        rowsEl.innerHTML = `
-          <tr>
-            <td colspan="7" class="muted" style="text-align:center;padding:18px">
-              لا توجد بيانات بعد...
-            </td>
-          </tr>
-        `;
+      if(!items.length){
+        elList.innerHTML = `
+          <div class="card">
+            <div class="row">
+              <div style="font-weight:900">لا توجد بيانات بعد...</div>
+              <div class="small">جرّب تحديث أو مسح البحث</div>
+            </div>
+          </div>`;
         return;
       }
 
-      rowsEl.innerHTML = data.map((o, idx) => `
-        <tr>
-          <td data-label="#">${o.id ?? (idx+1)}</td>
-          <td data-label="الاسم"><strong>${safe(o.name) || "—"}</strong></td>
-          <td data-label="الهاتف">${safe(o.phone) || "—"}</td>
-          <td data-label="المدينة">${safe(o.city) || "—"}</td>
-          <td data-label="ملاحظة">${safe(o.note) || "—"}</td>
-          <td data-label="التاريخ"><span class="muted">${fmtDate(o.created_at)}</span></td>
-          <td data-label="إجراءات">
-            <div class="actions">
-              <button class="btn secondary" style="padding:9px 12px;min-width:auto" onclick="openEdit(${o.id})">تعديل</button>
-              <button class="btn" style="padding:9px 12px;min-width:auto;background:var(--accent2);box-shadow:none" onclick="copyText('${safe(o.phone)}')">نسخ الهاتف</button>
+      elList.innerHTML = items.map(o => {
+        const st = statusLabel(o.status || "new");
+        const wa = "https://wa.me/" + normalizePhone(o.phone);
+        return `
+          <div class="card" data-id="${o.id}">
+            <div class="row">
+              <div class="id"># ${o.id}</div>
+              <div class="status ${st.cls}">${st.txt}</div>
             </div>
-          </td>
-        </tr>
-      `).join("");
+
+            <div class="two">
+              <div>
+                <div class="k">الاسم</div>
+                <div class="v">${escapeHtml(o.name || "")}</div>
+              </div>
+              <div>
+                <div class="k">الهاتف</div>
+                <div class="v mono">${escapeHtml(o.phone || "")}</div>
+              </div>
+            </div>
+
+            <div class="two">
+              <div>
+                <div class="k">المدينة</div>
+                <div class="v">${escapeHtml(o.city || "")}</div>
+              </div>
+              <div>
+                <div class="k">التاريخ</div>
+                <div class="v">${escapeHtml(formatDate(o.created_at))}</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="k">ملاحظة</div>
+            <div class="v" style="font-size:16px">${escapeHtml(o.note || "—")}</div>
+
+            <div class="actions">
+              <a class="btn-wa" style="padding:12px 14px;border-radius:14px;text-decoration:none;color:#fff;font-weight:900" target="_blank" href="${wa}">
+                فتح واتساب
+              </a>
+
+              <button class="btn-ghost" onclick="copyText('${escapeJs(o.phone || "")}')">نسخ الهاتف</button>
+
+              <select onchange="changeStatus(${o.id}, this.value)" class="btn-ghost" style="min-width:170px">
+                <option value="new" ${((o.status||"new")==="new")?"selected":""}>جديد</option>
+                <option value="working" ${((o.status||"new")==="working")?"selected":""}>قيد المعالجة</option>
+                <option value="done" ${((o.status||"new")==="done")?"selected":""}>مكتمل</option>
+              </select>
+
+              <button class="btn-del" onclick="deleteOrder(${o.id})">حذف</button>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     async function fetchOrders(){
-      setStatus("جاري جلب الطلبات...", "muted");
       try{
-        const res = await fetch(API_ORDERS, { method: "GET" });
-        if(!res.ok){
-          // 404 تعني غالباً endpoint خطأ أو backend لا يعمل
-          throw new Error(`HTTP ${res.status}`);
-        }
+        setState(true, "جاري الجلب...");
+        const res = await fetch(API_LIST, { cache:"no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-        if(!Array.isArray(data)) throw new Error("الرد ليس قائمة");
 
-        allOrders = data;
-        setStatus(`تم جلب ${data.length} طلب.`, "ok");
+        // توقع: array
+        allOrders = Array.isArray(data) ? data : (data.orders || []);
+        // لو ما يوجد status، نخليه new
+        allOrders = allOrders.map(x => ({...x, status: x.status || "new"}));
+
+        elLast.textContent = new Date().toLocaleString("ar-DZ");
+        setState(true, "تم");
         render();
       }catch(e){
-        setStatus("تعذر جلب الطلبات. تأكد أن الرابط صحيح وأن Render يعمل. ("+ e.message +")", "err");
-        allOrders = [];
+        console.error(e);
+        setState(false, "فشل الاتصال");
+        elList.innerHTML = `
+          <div class="card">
+            <div class="row">
+              <div style="font-weight:900">تعذر جلب الطلبات</div>
+              <div class="small mono">${escapeHtml(String(e.message || e))}</div>
+            </div>
+            <div class="hint">
+              تأكد أن الرابط صحيح: <span class="mono">${escapeHtml(API_LIST)}</span><br/>
+              وقد تحتاج تفعيل CORS في السيرفر.
+            </div>
+          </div>`;
+      }
+    }
+
+    async function deleteOrder(id){
+      if(!confirm("هل تريد حذف الطلب رقم " + id + " ؟")) return;
+
+      try{
+        const res = await fetch(API_DELETE(id), { method:"DELETE" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+
+        // حذف من الواجهة فوراً
+        allOrders = allOrders.filter(x => Number(x.id) !== Number(id));
         render();
+        alert("تم حذف الطلب ✅");
+      }catch(e){
+        alert("فشل حذف الطلب ❌\n" + (e.message || e));
       }
     }
 
-    // ====== Edit / Delete (اختياري) ======
-    // هذه الوظائف تحتاج أن يكون لديك endpoints في الباك اند:
-    // PUT /api/orders/:id
-    // DELETE /api/orders/:id
-    // إذا لم تكن موجودة، سيظهر خطأ عند الحفظ أو الحذف.
-    window.openEdit = function(id){
-      const o = allOrders.find(x => String(x.id) === String(id));
-      if(!o) return;
-
-      currentOrder = o;
-      m_name.value = safe(o.name);
-      m_phone.value = safe(o.phone);
-      m_city.value = safe(o.city);
-      m_note.value = safe(o.note);
-      m_meta.textContent = `ID: ${safe(o.id)} • ${fmtDate(o.created_at)}`;
-
-      modalBack.style.display = "flex";
-    }
-
-    function closeEdit(){
-      modalBack.style.display = "none";
-      currentOrder = null;
-    }
-
-    async function saveEdit(){
-      if(!currentOrder) return;
-
-      const payload = {
-        name: m_name.value.trim(),
-        phone: m_phone.value.trim(),
-        city: m_city.value.trim(),
-        note: m_note.value.trim()
-      };
-
-      setStatus("جاري الحفظ...", "muted");
+    // ✅ تغيير الحالة:
+    // - إذا السيرفر عندك لا يدعم هذا المسار، سنحفظ الحالة محلياً في المتصفح (localStorage)
+    async function changeStatus(id, status){
+      // 1) حاول على السيرفر
       try{
-        const res = await fetch(`${API_ORDERS}/${currentOrder.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        const res = await fetch(API_STATUS(id), {
+          method:"PUT",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ status })
         });
 
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        closeEdit();
+        if(res.ok){
+          // حدث محلياً
+          allOrders = allOrders.map(o => (Number(o.id)===Number(id) ? {...o, status} : o));
+          render();
+          return;
+        }
+        // لو فشل، نكمل للـ localStorage
+      }catch(e){}
+
+      // 2) fallback: localStorage
+      const key = "orderStatusMap";
+      const map = JSON.parse(localStorage.getItem(key) || "{}");
+      map[id] = status;
+      localStorage.setItem(key, JSON.stringify(map));
+
+      allOrders = allOrders.map(o => (Number(o.id)===Number(id) ? {...o, status} : o));
+      render();
+    }
+
+    // عند الجلب، طبق حالات localStorage إن وجدت (في حال السيرفر لا يدعم status)
+    function applyLocalStatus(){
+      const map = JSON.parse(localStorage.getItem("orderStatusMap") || "{}");
+      allOrders = allOrders.map(o => {
+        const s = map[o.id];
+        return s ? {...o, status:s} : o;
+      });
+    }
+
+    function copyText(txt){
+      navigator.clipboard.writeText(txt).then(()=> alert("تم النسخ ✅"));
+    }
+
+    function escapeHtml(str){
+      return (str ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function escapeJs(str){
+      return (str ?? "").toString()
+        .replaceAll("\\","\\\\")
+        .replaceAll("'","\\'")
+        .replaceAll('"','\\"');
+    }
+
+    // أحداث
+    elRefresh.addEventListener("click", async ()=>{
+      await fetchOrders();
+      applyLocalStatus();
+      render();
+    });
+
+    elSearch.addEventListener("input", render);
+    elFilter.addEventListener("change", render);
+
+    // تشغيل أول مرة + تحديث تلقائي
+    (async function init(){
+      await fetchOrders();
+      applyLocalStatus();
+      render();
+
+      timer = setInterval(async ()=>{
         await fetchOrders();
-        setStatus("تم الحفظ بنجاح ✅", "ok");
-      }catch(e){
-        setStatus("لم يتم الحفظ. إذا لم تضف PUT في الباك اند سيظهر هذا الخطأ. ("+e.message+")", "err");
-      }
-    }
-
-    async function deleteOrder(){
-      if(!currentOrder) return;
-      if(!confirm("هل تريد حذف هذا الطلب نهائياً؟")) return;
-
-      setStatus("جاري الحذف...", "muted");
-      try{
-        const res = await fetch(`${API_ORDERS}/${currentOrder.id}`, {
-          method: "DELETE"
-        });
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        closeEdit();
-        await fetchOrders();
-        setStatus("تم الحذف ✅", "ok");
-      }catch(e){
-        setStatus("لم يتم الحذف. إذا لم تضف DELETE في الباك اند سيظهر هذا الخطأ. ("+e.message+")", "err");
-      }
-    }
-
-    // ===== Helpers =====
-    window.copyText = async function(text){
-      try{
-        await navigator.clipboard.writeText(text || "");
-        setStatus("تم النسخ ✅", "ok");
-      }catch{
-        // fallback
-        const t = document.createElement("textarea");
-        t.value = text || "";
-        document.body.appendChild(t);
-        t.select();
-        document.execCommand("copy");
-        document.body.removeChild(t);
-        setStatus("تم النسخ ✅", "ok");
-      }
-    }
-
-    // Events
-    refreshBtn.addEventListener("click", fetchOrders);
-    openApiBtn.addEventListener("click", () => window.open(API_ORDERS, "_blank"));
-    searchEl.addEventListener("input", render);
-
-    closeModal.addEventListener("click", closeEdit);
-    cancelBtn.addEventListener("click", closeEdit);
-    modalBack.addEventListener("click", (e) => { if(e.target === modalBack) closeEdit(); });
-
-    saveBtn.addEventListener("click", saveEdit);
-    deleteBtn.addEventListener("click", deleteOrder);
-
-    // Load
-    fetchOrders();
+        applyLocalStatus();
+        render();
+      }, 7000);
+    })();
   </script>
 </body>
-  </html>
+</html>
